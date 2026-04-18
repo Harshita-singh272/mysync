@@ -43,28 +43,34 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.igdtuw.mysync.R
 
-
 @Preview(showSystemUi = true)
 @Composable
 fun Dash_CR(){
     val user = "06901012025"
     val email = "harshitasinghixa@gmail.com"
+
     var showprofile by remember{
         mutableStateOf(false)
     }
+
     val branch  = "CSE-1"
+
     val  total   = 77
+
     val thisweekannouncements  = 4
+
     val lastweekannouncements = 7
+
     val context = LocalContext.current
+
     Box(modifier = Modifier.fillMaxSize()) {
         LazyColumn(
             modifier = Modifier
                 .fillMaxSize()
                 .background(colorResource(id = R.color.off_white))
-        ) {
+        )
+         {
             item{
-
                 Box(
                     modifier = Modifier
                         .fillMaxWidth()

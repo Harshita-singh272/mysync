@@ -166,7 +166,7 @@ fun Login(navController: NavController) {
                     else -> {
                         when (selectedRole) {
                             "Student" -> navController.navigate("student")
-                            "Class Representative" -> navController.navigate("cr_dash")
+                            "Class Representative" -> navController.navigate("cr")
                         }
                     }
                 }

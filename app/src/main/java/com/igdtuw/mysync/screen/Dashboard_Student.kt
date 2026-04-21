@@ -195,8 +195,9 @@ fun Dash_main(navController: NavController) {
                                 end = 5.dp,
                                 bottom = 5.dp
                             ),
-                        contentAlignment = Alignment.TopStart
-                    ) {
+                        colors = ButtonDefaults.buttonColors(
+                            containerColor = colorResource(id = R.color.off_white),
+                    ) ){
                         Column {
                             Row {
                                 Spacer(modifier = Modifier.height(30.dp))
@@ -211,7 +212,7 @@ fun Dash_main(navController: NavController) {
                                     horizontalAlignment = Alignment.End
                                 ) {
                                     Icon(
-                                        painter = painterResource(id = R.drawable.bell),
+                                        painter = painterResource(id = R.drawable.speaker),
                                         contentDescription = null,
                                         tint = colorResource(id = R.color.olive),
                                         modifier = Modifier.size(size = 40.dp)
@@ -358,10 +359,7 @@ fun Dash_main(navController: NavController) {
                     Timetableblock()
                     Spacer(modifier = Modifier.height(15.dp))
                 }
-                Syllabusblock()
-                Timetableblock()
-                Spacer(modifier = Modifier.height(15.dp))
-            }
+
         }
         if (showprofile) {
             Box(
@@ -423,30 +421,7 @@ fun Dash_main(navController: NavController) {
                             )
                         }
                         Spacer(modifier = Modifier.height(25.dp))
-                        Button(
-                            onClick = {
-                                Toast.makeText(context, "Loading", Toast.LENGTH_SHORT).show()
-                            },
-                            modifier = Modifier.fillMaxWidth(),
-                            colors = ButtonDefaults.buttonColors(colorResource(id = R.color.olive))
-                        ) {
-                            Row(
-                                verticalAlignment = Alignment.CenterVertically
-                            )
-                            {
-                                Icon(
-                                    painter = painterResource(id = R.drawable.logout),
-                                    contentDescription = "LogOut",
-                                    modifier = Modifier.size(30.dp),
-                                    tint = colorResource(id = R.color.light_olive)
-                                )
-                                Spacer(modifier = Modifier.width(10.dp))
-                                Text(
-                                    text = "LogOut",
-                                    fontSize = 15.sp,
-                                    fontWeight = FontWeight.SemiBold
-                                )
-                            }
+
                             Spacer(modifier = Modifier.height(25.dp))
                             Button(
                                 onClick = {
@@ -481,4 +456,4 @@ fun Dash_main(navController: NavController) {
             }
         }
     }
-}
+

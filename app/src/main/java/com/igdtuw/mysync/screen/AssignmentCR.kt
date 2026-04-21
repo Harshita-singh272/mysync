@@ -136,69 +136,46 @@ fun AdminAssignmentScreen(
 
             Spacer(modifier = Modifier.height(20.dp))
 
-            Button(
-                onClick = onBack,
-                colors = ButtonDefaults.buttonColors(containerColor = olive)
-            ) {
-                Text("Back", color = cream)
-            }
-        }
-    }
 
-    // TITLE DIALOG
-    if (showTitleDialog) {
-        AlertDialog(
-            onDismissRequest = { showTitleDialog = false },
-            confirmButton = {
-                TextButton(onClick = { showTitleDialog = false }) {
-                    Text("Done")
-                }
-            },
-            title = { Text("Enter Title") },
-            text = {
-                TextField(
-                    value = assignmentTitle,
-                    onValueChange = { assignmentTitle = it },
-                    singleLine = true
+            // TITLE DIALOG
+            if (showTitleDialog) {
+                AlertDialog(
+                    onDismissRequest = { showTitleDialog = false },
+                    confirmButton = {
+                        TextButton(onClick = { showTitleDialog = false }) {
+                            Text("Done")
+                        }
+                    },
+                    title = { Text("Enter Title") },
+                    text = {
+                        TextField(
+                            value = assignmentTitle,
+                            onValueChange = { assignmentTitle = it },
+                            singleLine = true
+                        )
+                    }
                 )
             }
-        )
-    }
 
-    // LINK DIALOG
-    if (showLinkDialog) {
-        AlertDialog(
-            onDismissRequest = { showLinkDialog = false },
-            confirmButton = {
-                TextButton(onClick = { showLinkDialog = false }) {
-                    Text("Done")
-                }
-            },
-            title = { Text("Enter Link") },
-            text = {
-                TextField(
-                    value = assignmentLink,
-                    onValueChange = { assignmentLink = it },
-                    singleLine = true
+            // LINK DIALOG
+            if (showLinkDialog) {
+                AlertDialog(
+                    onDismissRequest = { showLinkDialog = false },
+                    confirmButton = {
+                        TextButton(onClick = { showLinkDialog = false }) {
+                            Text("Done")
+                        }
+                    },
+                    title = { Text("Enter Link") },
+                    text = {
+                        TextField(
+                            value = assignmentLink,
+                            onValueChange = { assignmentLink = it },
+                            singleLine = true
+                        )
+                    }
                 )
             }
-        )
-    }
-}
-
-@Preview(showBackground = true, backgroundColor = 0xFF888888)
-@Composable
-fun AdminAssignmentScreenPreview() {
-    MySyncTheme {
-        val sampleSubjects = remember {
-            mutableListOf(
-                SubjectData("Maths", mutableListOf(), mutableListOf()),
-                SubjectData("Physics", mutableListOf(), mutableListOf())
-            )
         }
-        AdminAssignmentScreen(
-            subjects = sampleSubjects,
-            onBack = {}
-        )
     }
 }

@@ -138,7 +138,9 @@ fun Dash_CR(navController: NavController){
                             fontSize = 17.sp
                         )
                     }
-                    IconButton(onClick = {}) {
+                    IconButton(onClick = {navController.navigate("student_cr") {
+                        popUpTo("cr") { inclusive = true }
+                    }}) {
                         Icon(
                             painter = painterResource(id = R.drawable.on),
                             contentDescription = "Switch",

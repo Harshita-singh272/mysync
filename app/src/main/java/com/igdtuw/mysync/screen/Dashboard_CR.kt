@@ -41,12 +41,12 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.navigation.NavController
 import com.igdtuw.mysync.R
 
 
-@Preview(showSystemUi = true)
 @Composable
-fun Dash_CR(){
+fun Dash_CR(navController: NavController){
     val user = "06901012025"
     val email = "harshitasinghixa@gmail.com"
     var showprofile by remember{
@@ -142,7 +142,9 @@ fun Dash_CR(){
                 }
                 Spacer(modifier = Modifier.height(16.dp))
                 Button(
-                    onClick = {},
+                    onClick = {
+                        navController.navigate("cr_assignment")
+                    },
                     elevation = ButtonDefaults.buttonElevation(defaultElevation = 5.dp),
                     shape = RoundedCornerShape(15.dp),
                     modifier = Modifier
@@ -208,7 +210,9 @@ fun Dash_CR(){
                 }
                 Spacer(modifier = Modifier.height(10.dp))
                 Button(
-                    onClick = {},
+                    onClick = {
+                        navController.navigate("cr_attendance")
+                    },
                     elevation = ButtonDefaults.buttonElevation(defaultElevation = 5.dp),
                     shape = RoundedCornerShape(15.dp),
                     modifier = Modifier
@@ -315,7 +319,9 @@ fun Dash_CR(){
                 }
                 Spacer(modifier = Modifier.height(10.dp))
                 Button(
-                    onClick = {},
+                    onClick = {
+                        navController.navigate("cr_announcements")
+                    },
                     elevation = ButtonDefaults.buttonElevation(defaultElevation = 5.dp),
                     shape = RoundedCornerShape(15.dp),
                     modifier = Modifier
@@ -478,7 +484,11 @@ fun Dash_CR(){
                             )
                         }
                         Spacer(modifier = Modifier.height(25.dp))
-                        Button(onClick = { Toast.makeText(context, "Loading", Toast.LENGTH_SHORT).show()},
+                        Button(onClick = {
+                            navController.navigate("login") {
+                                popUpTo("login") { inclusive = true }
+                            }
+                        },
                             modifier = Modifier.fillMaxWidth(),
                             colors = ButtonDefaults.buttonColors(colorResource(id = R.color.olive))) {
                             Row(

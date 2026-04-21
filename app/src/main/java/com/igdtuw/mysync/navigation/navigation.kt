@@ -1,0 +1,80 @@
+package com.igdtuw.mysync.navigation
+
+import androidx.compose.material3.Text
+import androidx.compose.runtime.Composable
+import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.navigation.compose.rememberNavController
+import com.igdtuw.mysync.screen.Dash_CR
+import com.igdtuw.mysync.screen.Dash_main
+import com.igdtuw.mysync.screen.Login
+import androidx.navigation.compose.NavHost
+import androidx.navigation.compose.composable
+import com.igdtuw.mysync.screen.AdminAssignmentScreen
+import com.igdtuw.mysync.screen.Announcement
+import com.igdtuw.mysync.screen.AssignmentScreen
+import com.igdtuw.mysync.screen.CRScreen
+import com.igdtuw.mysync.screen.PostAnnouncementScreen
+import com.igdtuw.mysync.screen.StudentScreen
+import com.igdtuw.mysync.screen.Syllabusblock
+import com.igdtuw.mysync.screen.Timetableblock
+import com.igdtuw.mysync.screen.ViewAnnouncementScreen
+import com.igdtuw.mysync.viewmodel.AttendanceViewModel
+
+
+
+@Composable
+fun AppNavigation() {
+    val navController = rememberNavController()
+
+    NavHost(
+        navController = navController,
+        startDestination = "login"
+    ) {
+        composable("login") {
+            Login(navController)
+        }
+        composable("student") {
+            Dash_main(navController)
+        }
+        composable("cr") {
+            Dash_CR(navController)
+        }
+        composable("assignment") {
+            AssignmentScreen(
+                subjects = emptyList(),   // temporary
+                onEditClick = {}
+            )
+        }
+
+        composable("announcements") {
+            ViewAnnouncementScreen(
+                announcements = emptyList()
+            )
+        }
+        composable(route = "attendance") {
+            val vm: AttendanceViewModel = viewModel()
+            StudentScreen(
+                viewModel = vm
+            )
+        }
+
+        composable("cr_assignment") {
+            AdminAssignmentScreen(
+                subjects = mutableListOf(),   // temporary
+                onBack = { navController.popBackStack() }
+            )
+        }
+
+        composable("cr_attendance") {
+            val vm: AttendanceViewModel = viewModel()
+            CRScreen(viewModel = vm)
+        }
+
+        composable("cr_announcements") {
+            PostAnnouncementScreen()
+        }
+    }
+}
+
+
+

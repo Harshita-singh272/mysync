@@ -13,6 +13,7 @@ import com.igdtuw.mysync.screen.AdminAssignmentScreen
 import com.igdtuw.mysync.screen.Announcement
 import com.igdtuw.mysync.screen.AssignmentScreen
 import com.igdtuw.mysync.screen.CRScreen
+import com.igdtuw.mysync.screen.Dash_main_Cr
 import com.igdtuw.mysync.screen.PostAnnouncementScreen
 import com.igdtuw.mysync.screen.StudentScreen
 import com.igdtuw.mysync.screen.Syllabusblock
@@ -41,7 +42,7 @@ fun AppNavigation() {
         }
         composable("assignment") {
             AssignmentScreen(
-                subjects = emptyList(),   // temporary
+                subjects = emptyList(),
                 onEditClick = {}
             )
         }
@@ -60,7 +61,7 @@ fun AppNavigation() {
 
         composable("cr_assignment") {
             AdminAssignmentScreen(
-                subjects = mutableListOf(),   // temporary
+                subjects = mutableListOf(),
                 onBack = { navController.popBackStack() }
             )
         }
@@ -72,6 +73,9 @@ fun AppNavigation() {
 
         composable("cr_announcements") {
             PostAnnouncementScreen()
+        }
+        composable("student_cr") {
+            Dash_main_Cr(navController)
         }
     }
 }

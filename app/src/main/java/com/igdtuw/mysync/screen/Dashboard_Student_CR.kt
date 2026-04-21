@@ -41,11 +41,12 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.navigation.NavController
 import com.igdtuw.mysync.R
 
-@Preview(showSystemUi = true)
+
 @Composable
-fun Dash_main() {
+fun Dash_main_Cr(navController: NavController) {
     val user = "06901012025"
     val email = "harshitasinghixa@gmail.com"
     var showprofile by remember {
@@ -122,7 +123,9 @@ fun Dash_main() {
                             fontSize = 17.sp
                         )
                     }
-                    IconButton(onClick = {}) {
+                    IconButton(onClick = {navController.navigate("cr") {
+                        popUpTo("student_cr") { inclusive = true }
+                    }}) {
                         Icon(
                             painter = painterResource(id = R.drawable.off),
                             contentDescription = "Switch",
@@ -133,7 +136,9 @@ fun Dash_main() {
                 }
                 Spacer(modifier = Modifier.height(16.dp))
                 Button(
-                    onClick = {},
+                    onClick = {
+                        navController.navigate("assignment")
+                    },
                     elevation = ButtonDefaults.buttonElevation(defaultElevation = 5.dp),
                     shape = RoundedCornerShape(15.dp),
                     modifier = Modifier.fillMaxWidth(0.97f)
@@ -186,7 +191,7 @@ fun Dash_main() {
                 }
                     Spacer(modifier = Modifier.height(10.dp))
                     Button(
-                        onClick = {},
+                        onClick = {navController.navigate("attendance")},
                         elevation = ButtonDefaults.buttonElevation(defaultElevation = 5.dp),
                         shape = RoundedCornerShape(15.dp),
                         modifier = Modifier.fillMaxWidth(0.97f)
@@ -281,7 +286,7 @@ fun Dash_main() {
                     }
                     Spacer(modifier = Modifier.height(10.dp))
                     Button(
-                        onClick = {},
+                        onClick = {navController.navigate("announcements")},
                         elevation = ButtonDefaults.buttonElevation(defaultElevation = 5.dp),
                         shape = RoundedCornerShape(15.dp),
                         modifier = Modifier.fillMaxWidth(0.97f)
@@ -434,7 +439,9 @@ fun Dash_main() {
                             Spacer(modifier = Modifier.height(25.dp))
                             Button(
                                 onClick = {
-                                    Toast.makeText(context, "Loading", Toast.LENGTH_SHORT).show()
+                                    navController.navigate("login") {
+                                        popUpTo("login") { inclusive = true }
+                                    }
                                 },
                                 modifier = Modifier.fillMaxWidth(),
                                 colors = ButtonDefaults.buttonColors(colorResource(id = R.color.olive))

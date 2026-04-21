@@ -1,5 +1,7 @@
 package com.igdtuw.mysync.screen
 
+import android.content.Intent
+import android.widget.Toast
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
@@ -39,11 +41,14 @@ import androidx.compose.material3.LocalTextStyle
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.ui.draw.shadow
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.input.PasswordVisualTransformation
+import androidx.navigation.NavController
+import kotlin.jvm.java
 
 @Composable
-@Preview(showSystemUi = true)
-fun Login() {
+fun Login(navController: NavController) {
+    val context = LocalContext.current
     var expanded by remember {
         mutableStateOf(false)
     }
@@ -82,7 +87,7 @@ fun Login() {
                 text = selectedRole,
                 color = colorResource(id = R.color.olive),
                 fontWeight = FontWeight.Bold,
-                modifier=Modifier.align(Alignment.Center),
+                modifier = Modifier.align(Alignment.Center),
                 fontSize = 18.sp,
             )
             Icon(
@@ -144,17 +149,41 @@ fun Login() {
             )
         )
 
-        
+
         Spacer(modifier = Modifier.height(30.dp))
         Button(
-            onClick = {},
+            onClick = {
+                when {
+                    selectedRole == "Role" -> {
+                        Toast.makeText(context, "Please select a role", Toast.LENGTH_SHORT).show()
+                    }
+                    enrollmentNumber.isBlank() -> {
+                        Toast.makeText(context, "Enter enrollment number", Toast.LENGTH_SHORT).show()
+                    }
+                    password.isBlank() -> {
+                        Toast.makeText(context, "Enter password", Toast.LENGTH_SHORT).show()
+                    }
+                    else -> {
+                        when (selectedRole) {
+                            "Student" -> navController.navigate("student")
+                            "Class Representative" -> navController.navigate("cr_dash")
+                        }
+                    }
+                }
+            },
             modifier = Modifier
                 .width(250.dp)
                 .shadow(4.dp, RoundedCornerShape(24.dp)),
             shape = RoundedCornerShape(24.dp),
-            colors = ButtonDefaults.buttonColors(containerColor = colorResource(id = R.color.sage_green))
+            colors = ButtonDefaults.buttonColors(
+                containerColor = colorResource(id = R.color.sage_green)
+            )
         ) {
-            Text("Login", color = colorResource(id=R.color.cream), fontWeight = FontWeight.Bold)
+            Text(
+                "Login",
+                color = colorResource(id = R.color.cream),
+                fontWeight = FontWeight.Bold
+            )
         }
     }
 }

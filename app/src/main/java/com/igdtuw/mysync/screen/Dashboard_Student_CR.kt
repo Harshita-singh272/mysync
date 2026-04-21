@@ -41,12 +41,11 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.navigation.NavController
 import com.igdtuw.mysync.R
 
-
+@Preview(showSystemUi = true)
 @Composable
-fun Dash_main(navController: NavController) {
+fun Dash_main() {
     val user = "06901012025"
     val email = "harshitasinghixa@gmail.com"
     var showprofile by remember {
@@ -104,7 +103,6 @@ fun Dash_main(navController: NavController) {
                         }
                     }
                 }
-
                 Spacer(modifier = Modifier.height(10.dp))
                 Row(modifier = Modifier
                     .padding(start = 5.dp, end= 10.dp)
@@ -124,12 +122,18 @@ fun Dash_main(navController: NavController) {
                             fontSize = 17.sp
                         )
                     }
+                    IconButton(onClick = {}) {
+                        Icon(
+                            painter = painterResource(id = R.drawable.off),
+                            contentDescription = "Switch",
+                            modifier = Modifier.size(size = 40.dp),
+                            tint = colorResource(id = R.color.dark_olive)
+                        )
+                    }
                 }
                 Spacer(modifier = Modifier.height(16.dp))
                 Button(
-                    onClick = {
-                        navController.navigate("assignment")
-                    },
+                    onClick = {},
                     elevation = ButtonDefaults.buttonElevation(defaultElevation = 5.dp),
                     shape = RoundedCornerShape(15.dp),
                     modifier = Modifier.fillMaxWidth(0.97f)
@@ -182,93 +186,102 @@ fun Dash_main(navController: NavController) {
                 }
                     Spacer(modifier = Modifier.height(10.dp))
                     Button(
-                        onClick = {
-                            navController.navigate("attendance")
-                        },
+                        onClick = {},
                         elevation = ButtonDefaults.buttonElevation(defaultElevation = 5.dp),
                         shape = RoundedCornerShape(15.dp),
                         modifier = Modifier.fillMaxWidth(0.97f)
                             .height(155.dp)
                             .padding(
-                                top = 10.dp,
-                                start = 0.dp,
+                                top = 5.dp,
+                                start = 5.dp,
                                 end = 5.dp,
                                 bottom = 5.dp
                             ),
-                        contentAlignment = Alignment.TopStart
+                        colors = ButtonDefaults.buttonColors(containerColor = colorResource(id = R.color.off_white))
                     ) {
-                        Column {
-                            Row {
-                                Spacer(modifier = Modifier.height(30.dp))
-                                Text(
-                                    text = "Announcements",
-                                    fontFamily = FontFamily(Font(R.font.nunito_bold)),
-                                    fontSize = 25.sp,
-                                    color = colorResource(id = R.color.dark_grey),
-                                )
-                                Column(
-                                    modifier = Modifier.fillMaxWidth(),
-                                    horizontalAlignment = Alignment.End
-                                ) {
-                                    Icon(
-                                        painter = painterResource(id = R.drawable.bell),
-                                        contentDescription = null,
-                                        tint = colorResource(id = R.color.olive),
-                                        modifier = Modifier.size(size = 40.dp)
+                        Column(
+                            modifier = Modifier.fillMaxSize()
+                        ) {
+                            Box(
+                                modifier = Modifier.fillMaxWidth()
+                                    .padding(
+                                        top = 10.dp,
+                                        start = 0.dp,
+                                        end = 0.dp,
+                                        bottom = 0.dp
+                                    ),
+                                contentAlignment = Alignment.TopStart
+                            ) {
+                                Row {
+                                    Spacer(modifier = Modifier.height(10.dp))
+                                    Text(
+                                        text = "Attendance",
+                                        fontFamily = FontFamily(Font(R.font.nunito_bold)),
+                                        fontSize = 25.sp,
+                                        color = colorResource(id = R.color.dark_grey),
                                     )
+                                    Column(
+                                        modifier = Modifier.fillMaxWidth(),
+                                        horizontalAlignment = Alignment.End
+                                    ) {
+                                        Icon(
+                                            painter = painterResource(id = R.drawable.speaker),
+                                            contentDescription = null,
+                                            tint = colorResource(id = R.color.olive),
+                                            modifier = Modifier.size(size = 47.dp)
+                                        )
+                                    }
                                 }
                             }
-                            Spacer(modifier = Modifier.height(10.dp))
                             Box(
                                 modifier = Modifier.fillMaxWidth()
                             ) {
                                 Row {
                                     Spacer(modifier = Modifier.width(15.dp))
                                     Text(
-                                        text = "This Week :",
+                                        text = "Branch :",
                                         color = colorResource(id = R.color.grey),
                                         fontSize = 18.sp,
-                                        fontFamily = FontFamily(Font(R.font.nunito_light)),
-                                        fontWeight = FontWeight.Bold
+                                        fontFamily = FontFamily(Font(R.font.nunito_semibold)),
+                                        fontWeight = FontWeight.SemiBold
                                     )
-                                    Spacer(modifier = Modifier.width(17.dp))
+                                    Spacer(modifier = Modifier.width(8.dp))
                                     Text(
-                                        text = "$thisweekannouncements announcements",
+                                        text = branch,
                                         color = colorResource(id = R.color.grey),
-                                        fontSize = 17.sp,
+                                        fontSize = 15.sp,
                                         fontFamily = FontFamily(Font(R.font.nunito_light)),
                                         fontWeight = FontWeight.Bold
                                     )
                                 }
                             }
-                            Spacer(modifier = Modifier.height(4.dp))
+                            Spacer(modifier = Modifier.height(5.dp))
                             Box(modifier = Modifier.fillMaxWidth()) {
                                 Row {
                                     Spacer(modifier = Modifier.width(15.dp))
                                     Text(
-                                        text = "Last Week :",
+                                        text = "Total Strength :",
                                         color = colorResource(id = R.color.grey),
                                         fontSize = 18.sp,
-                                        fontFamily = FontFamily(Font(R.font.nunito_light)),
-                                        fontWeight = FontWeight.Bold
+                                        fontFamily = FontFamily(Font(R.font.nunito_semibold)),
+                                        fontWeight = FontWeight.SemiBold
                                     )
-                                    Spacer(modifier = Modifier.width(17.dp))
+                                    Spacer(modifier = Modifier.width(5.dp))
                                     Text(
-                                        text = "$lastweekannouncements announcements",
+                                        text = "$total",
                                         color = colorResource(id = R.color.grey),
-                                        fontSize = 17.sp,
+                                        fontSize = 15.sp,
                                         fontFamily = FontFamily(Font(R.font.nunito_light)),
                                         fontWeight = FontWeight.Bold
                                     )
                                 }
                             }
+
                         }
                     }
                     Spacer(modifier = Modifier.height(10.dp))
                     Button(
-                        onClick = {
-                            navController.navigate("announcements")
-                        },
+                        onClick = {},
                         elevation = ButtonDefaults.buttonElevation(defaultElevation = 5.dp),
                         shape = RoundedCornerShape(15.dp),
                         modifier = Modifier.fillMaxWidth(0.97f)
@@ -358,101 +371,70 @@ fun Dash_main(navController: NavController) {
                     Timetableblock()
                     Spacer(modifier = Modifier.height(15.dp))
                 }
-                Syllabusblock()
-                Timetableblock()
-                Spacer(modifier = Modifier.height(15.dp))
-            }
         }
-        if (showprofile) {
-            Box(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .clickable { showprofile = false }, contentAlignment = Alignment.TopEnd
-            ) {
+            if (showprofile) {
                 Box(
                     modifier = Modifier
-                        .padding(top = 60.dp, end = 10.dp) // Offset from the very corner
-                        .fillMaxWidth(0.70f) // Takes 70% of screen width
-                        .wrapContentHeight() // Only as tall as its content
-                        .border(
-                            3.dp,
-                            color = colorResource(id = R.color.sage_green),
-                            shape = RoundedCornerShape(20.dp)
-                        )
-                        .background(
-                            shape = RoundedCornerShape(20.dp),
-                            color = colorResource(id = R.color.button)
-                        )
-                        .padding(15.dp)
-                        .clickable(enabled = false) { } // Prevents closing when clicking inside the card
-                )
-                {
-                    Column(horizontalAlignment = Alignment.CenterHorizontally) {
-                        Image(
-                            painter = painterResource(id = R.drawable.big_profile),
-                            contentDescription = "My Profile",
-                            modifier = Modifier.size(120.dp)
-                                .border(
-                                    6.dp,
-                                    color = colorResource(id = R.color.sage_gray),
-                                    shape = RoundedCornerShape(80.dp)
-                                )
-                        )
-                        Spacer(modifier = Modifier.height(15.dp))
-                        Row {
-                            Text(
-                                text = "Username:  ",
-                                fontWeight = FontWeight.SemiBold,
-                                fontSize = 15.sp
+                        .fillMaxSize()
+                        .clickable { showprofile = false }, contentAlignment = Alignment.TopEnd
+                ) {
+                    Box(
+                        modifier = Modifier
+                            .padding(top = 60.dp, end = 10.dp) // Offset from the very corner
+                            .fillMaxWidth(0.70f) // Takes 70% of screen width
+                            .wrapContentHeight() // Only as tall as its content
+                            .border(
+                                3.dp,
+                                color = colorResource(id = R.color.sage_green),
+                                shape = RoundedCornerShape(20.dp)
                             )
-                            Text(
-                                text = user,
-                                fontSize = 15.sp
+                            .background(
+                                shape = RoundedCornerShape(20.dp),
+                                color = colorResource(id = R.color.button)
                             )
-                        }
-                        Spacer(modifier = Modifier.height(8.dp))
-                        Row {
-                            Text(
-                                text = "Email:  ",
-                                fontWeight = FontWeight.SemiBold,
-                                fontSize = 15.sp
+                            .padding(15.dp)
+                            .clickable(enabled = false) { } // Prevents closing when clicking inside the card
+                    )
+                    {
+                        Column(horizontalAlignment = Alignment.CenterHorizontally) {
+                            Image(
+                                painter = painterResource(id = R.drawable.big_profile),
+                                contentDescription = "My Profile",
+                                modifier = Modifier.size(120.dp)
+                                    .border(
+                                        6.dp,
+                                        color = colorResource(id = R.color.sage_gray),
+                                        shape = RoundedCornerShape(80.dp)
+                                    )
                             )
-                            Text(
-                                text = email,
-                                fontSize = 15.sp
-                            )
-                        }
-                        Spacer(modifier = Modifier.height(25.dp))
-                        Button(
-                            onClick = {
-                                Toast.makeText(context, "Loading", Toast.LENGTH_SHORT).show()
-                            },
-                            modifier = Modifier.fillMaxWidth(),
-                            colors = ButtonDefaults.buttonColors(colorResource(id = R.color.olive))
-                        ) {
-                            Row(
-                                verticalAlignment = Alignment.CenterVertically
-                            )
-                            {
-                                Icon(
-                                    painter = painterResource(id = R.drawable.logout),
-                                    contentDescription = "LogOut",
-                                    modifier = Modifier.size(30.dp),
-                                    tint = colorResource(id = R.color.light_olive)
-                                )
-                                Spacer(modifier = Modifier.width(10.dp))
+                            Spacer(modifier = Modifier.height(15.dp))
+                            Row {
                                 Text(
-                                    text = "LogOut",
-                                    fontSize = 15.sp,
-                                    fontWeight = FontWeight.SemiBold
+                                    text = "Username:  ",
+                                    fontWeight = FontWeight.SemiBold,
+                                    fontSize = 15.sp
+                                )
+                                Text(
+                                    text = user,
+                                    fontSize = 15.sp
+                                )
+                            }
+                            Spacer(modifier = Modifier.height(8.dp))
+                            Row {
+                                Text(
+                                    text = "Email:  ",
+                                    fontWeight = FontWeight.SemiBold,
+                                    fontSize = 15.sp
+                                )
+                                Text(
+                                    text = email,
+                                    fontSize = 15.sp
                                 )
                             }
                             Spacer(modifier = Modifier.height(25.dp))
                             Button(
                                 onClick = {
-                                    navController.navigate("login") {
-                                        popUpTo("login") { inclusive = true }
-                                    }
+                                    Toast.makeText(context, "Loading", Toast.LENGTH_SHORT).show()
                                 },
                                 modifier = Modifier.fillMaxWidth(),
                                 colors = ButtonDefaults.buttonColors(colorResource(id = R.color.olive))
@@ -481,4 +463,3 @@ fun Dash_main(navController: NavController) {
             }
         }
     }
-}

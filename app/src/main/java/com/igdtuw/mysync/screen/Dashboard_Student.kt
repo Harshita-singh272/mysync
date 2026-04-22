@@ -1,6 +1,8 @@
 package com.igdtuw.mysync.screen
 
 
+import android.content.Context
+import android.content.Context.MODE_PRIVATE
 import android.widget.Toast
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -46,7 +48,8 @@ import com.igdtuw.mysync.R
 import com.igdtuw.mysync.viewmodel.DashboardViewModel
 
 @Composable
-fun Dash_main(navController: NavController) {
+fun Dash_main(navController: NavController, dashboardViewModel: DashboardViewModel
+) {
 //    val user = "06901012025"
 //    val email = "harshitasinghixa@gmail.com"
     var showprofile by remember {
@@ -56,8 +59,9 @@ fun Dash_main(navController: NavController) {
 //    val total = 77
 //    val thisweekannouncements = 4
 //    val lastweekannouncements = 7
-    val viewModel: DashboardViewModel = androidx.lifecycle.viewmodel.compose.viewModel()
-    val data = viewModel.dashboardData.value
+//    val viewModel: DashboardViewModel = androidx.lifecycle.viewmodel.compose.viewModel()
+//    val data = viewModel.dashboardData.value
+    val data = dashboardViewModel.dashboardData.value
     val context = LocalContext.current
     Box(modifier = Modifier.fillMaxSize()) {
         LazyColumn(
@@ -438,8 +442,12 @@ fun Dash_main(navController: NavController) {
                             Spacer(modifier = Modifier.height(25.dp))
                             Button(
                                 onClick = {
+                                    val prefs = context.getSharedPreferences("app_prefs", MODE_PRIVATE)
+                                    prefs.edit().clear().apply()
                                     navController.navigate("login") {
-                                        popUpTo("login") { inclusive = true }
+                                        popUpTo(navController.graph.startDestinationId) {
+                                            inclusive = true
+                                        }
                                     }
                                 },
                                 modifier = Modifier.fillMaxWidth(),

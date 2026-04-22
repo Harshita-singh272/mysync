@@ -47,9 +47,8 @@ import com.igdtuw.mysync.viewmodel.DashboardViewModel
 
 
 @Composable
-fun Dash_CR(navController: NavController){
-    val viewModel: DashboardViewModel = androidx.lifecycle.viewmodel.compose.viewModel()
-    val data = viewModel.dashboardData.value
+fun Dash_CR(navController: NavController,dashboardViewModel: DashboardViewModel){
+    val data = dashboardViewModel.dashboardData.value
     var showprofile by remember{
         mutableStateOf(false)
     }
@@ -486,7 +485,9 @@ fun Dash_CR(navController: NavController){
                         Spacer(modifier = Modifier.height(25.dp))
                         Button(onClick = {
                             navController.navigate("login") {
-                                popUpTo("login") { inclusive = true }
+                                popUpTo(navController.graph.startDestinationId) {
+                                    inclusive = true
+                                }
                             }
                         },
                             modifier = Modifier.fillMaxWidth(),

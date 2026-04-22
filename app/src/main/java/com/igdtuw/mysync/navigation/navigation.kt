@@ -15,28 +15,35 @@ import com.igdtuw.mysync.screen.AssignmentScreen
 import com.igdtuw.mysync.screen.CRScreen
 import com.igdtuw.mysync.screen.Dash_main_Cr
 import com.igdtuw.mysync.screen.PostAnnouncementScreen
+import com.igdtuw.mysync.screen.SplashScreen
 import com.igdtuw.mysync.screen.StudentScreen
 import com.igdtuw.mysync.screen.Syllabusblock
 import com.igdtuw.mysync.screen.Timetableblock
 import com.igdtuw.mysync.screen.ViewAnnouncementScreen
 import com.igdtuw.mysync.viewmodel.AttendanceViewModel
+import com.igdtuw.mysync.viewmodel.DashboardViewModel
 
 @Composable
 fun AppNavigation() {
     val navController = rememberNavController()
+    val dashboardViewModel: DashboardViewModel = viewModel()
 
     NavHost(
         navController = navController,
-        startDestination = "login"
+        startDestination = "splashscreen"
     ) {
         composable("login") {
-            Login(navController)
+            Login(navController, dashboardViewModel)
         }
+
         composable("student") {
-            Dash_main(navController)
+            Dash_main(navController, dashboardViewModel)
+        }
+        composable("splashscreen") {
+            SplashScreen(navController)
         }
         composable("cr") {
-            Dash_CR(navController)
+            Dash_CR(navController, dashboardViewModel)
         }
         composable("assignment") {
             AssignmentScreen(
@@ -73,10 +80,12 @@ fun AppNavigation() {
             PostAnnouncementScreen()
         }
         composable("student_cr") {
-            Dash_main_Cr(navController)
+            Dash_main_Cr(navController, dashboardViewModel)
         }
     }
 }
+
+
 
 
 

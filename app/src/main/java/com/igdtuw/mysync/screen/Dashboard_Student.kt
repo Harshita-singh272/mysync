@@ -43,19 +43,21 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.igdtuw.mysync.R
-
+import com.igdtuw.mysync.viewmodel.DashboardViewModel
 
 @Composable
 fun Dash_main(navController: NavController) {
-    val user = "06901012025"
-    val email = "harshitasinghixa@gmail.com"
+//    val user = "06901012025"
+//    val email = "harshitasinghixa@gmail.com"
     var showprofile by remember {
         mutableStateOf(false)
     }
-    val branch = "CSE-1"
-    val total = 77
-    val thisweekannouncements = 4
-    val lastweekannouncements = 7
+//    val branch = "CSE-1"
+//    val total = 77
+//    val thisweekannouncements = 4
+//    val lastweekannouncements = 7
+    val viewModel: DashboardViewModel = androidx.lifecycle.viewmodel.compose.viewModel()
+    val data = viewModel.dashboardData.value
     val context = LocalContext.current
     Box(modifier = Modifier.fillMaxSize()) {
         LazyColumn(
@@ -181,28 +183,37 @@ fun Dash_main(navController: NavController) {
                     }
                 }
                     Spacer(modifier = Modifier.height(10.dp))
-                    Button(
-                        onClick = {
-                            navController.navigate("attendance")
-                        },
-                        elevation = ButtonDefaults.buttonElevation(defaultElevation = 5.dp),
-                        shape = RoundedCornerShape(15.dp),
-                        modifier = Modifier.fillMaxWidth(0.97f)
-                            .height(155.dp)
-                            .padding(
-                                top = 10.dp,
-                                start = 0.dp,
-                                end = 5.dp,
-                                bottom = 5.dp
-                            ),
-                        colors = ButtonDefaults.buttonColors(
-                            containerColor = colorResource(id = R.color.off_white),
-                    ) ){
-                        Column {
+                Button(
+                    onClick = {navController.navigate("attendance")},
+                    elevation = ButtonDefaults.buttonElevation(defaultElevation = 5.dp),
+                    shape = RoundedCornerShape(15.dp),
+                    modifier = Modifier.fillMaxWidth(0.97f)
+                        .height(155.dp)
+                        .padding(
+                            top = 5.dp,
+                            start = 5.dp,
+                            end = 5.dp,
+                            bottom = 5.dp
+                        ),
+                    colors = ButtonDefaults.buttonColors(containerColor = colorResource(id = R.color.off_white))
+                ) {
+                    Column(
+                        modifier = Modifier.fillMaxSize()
+                    ) {
+                        Box(
+                            modifier = Modifier.fillMaxWidth()
+                                .padding(
+                                    top = 10.dp,
+                                    start = 0.dp,
+                                    end = 0.dp,
+                                    bottom = 0.dp
+                                ),
+                            contentAlignment = Alignment.TopStart
+                        ) {
                             Row {
-                                Spacer(modifier = Modifier.height(30.dp))
+                                Spacer(modifier = Modifier.height(10.dp))
                                 Text(
-                                    text = "Announcements",
+                                    text = "Attendance",
                                     fontFamily = FontFamily(Font(R.font.nunito_bold)),
                                     fontSize = 25.sp,
                                     color = colorResource(id = R.color.dark_grey),
@@ -215,56 +226,57 @@ fun Dash_main(navController: NavController) {
                                         painter = painterResource(id = R.drawable.speaker),
                                         contentDescription = null,
                                         tint = colorResource(id = R.color.olive),
-                                        modifier = Modifier.size(size = 40.dp)
-                                    )
-                                }
-                            }
-                            Spacer(modifier = Modifier.height(10.dp))
-                            Box(
-                                modifier = Modifier.fillMaxWidth()
-                            ) {
-                                Row {
-                                    Spacer(modifier = Modifier.width(15.dp))
-                                    Text(
-                                        text = "This Week :",
-                                        color = colorResource(id = R.color.grey),
-                                        fontSize = 18.sp,
-                                        fontFamily = FontFamily(Font(R.font.nunito_light)),
-                                        fontWeight = FontWeight.Bold
-                                    )
-                                    Spacer(modifier = Modifier.width(17.dp))
-                                    Text(
-                                        text = "$thisweekannouncements announcements",
-                                        color = colorResource(id = R.color.grey),
-                                        fontSize = 17.sp,
-                                        fontFamily = FontFamily(Font(R.font.nunito_light)),
-                                        fontWeight = FontWeight.Bold
-                                    )
-                                }
-                            }
-                            Spacer(modifier = Modifier.height(4.dp))
-                            Box(modifier = Modifier.fillMaxWidth()) {
-                                Row {
-                                    Spacer(modifier = Modifier.width(15.dp))
-                                    Text(
-                                        text = "Last Week :",
-                                        color = colorResource(id = R.color.grey),
-                                        fontSize = 18.sp,
-                                        fontFamily = FontFamily(Font(R.font.nunito_light)),
-                                        fontWeight = FontWeight.Bold
-                                    )
-                                    Spacer(modifier = Modifier.width(17.dp))
-                                    Text(
-                                        text = "$lastweekannouncements announcements",
-                                        color = colorResource(id = R.color.grey),
-                                        fontSize = 17.sp,
-                                        fontFamily = FontFamily(Font(R.font.nunito_light)),
-                                        fontWeight = FontWeight.Bold
+                                        modifier = Modifier.size(size = 47.dp)
                                     )
                                 }
                             }
                         }
+                        Box(
+                            modifier = Modifier.fillMaxWidth()
+                        ) {
+                            Row {
+                                Spacer(modifier = Modifier.width(15.dp))
+                                Text(
+                                    text = "Branch :",
+                                    color = colorResource(id = R.color.grey),
+                                    fontSize = 18.sp,
+                                    fontFamily = FontFamily(Font(R.font.nunito_semibold)),
+                                    fontWeight = FontWeight.SemiBold
+                                )
+                                Spacer(modifier = Modifier.width(8.dp))
+                                Text(
+                                    text = data.branch,
+                                    color = colorResource(id = R.color.grey),
+                                    fontSize = 15.sp,
+                                    fontFamily = FontFamily(Font(R.font.nunito_light)),
+                                    fontWeight = FontWeight.Bold
+                                )
+                            }
+                        }
+                        Spacer(modifier = Modifier.height(5.dp))
+                        Box(modifier = Modifier.fillMaxWidth()) {
+                            Row {
+                                Spacer(modifier = Modifier.width(15.dp))
+                                Text(
+                                    text = "Total Strength :",
+                                    color = colorResource(id = R.color.grey),
+                                    fontSize = 18.sp,
+                                    fontFamily = FontFamily(Font(R.font.nunito_semibold)),
+                                    fontWeight = FontWeight.SemiBold
+                                )
+                                Spacer(modifier = Modifier.width(5.dp))
+                                Text(
+                                    text = "${data.total}",
+                                    color = colorResource(id = R.color.grey),
+                                    fontSize = 15.sp,
+                                    fontFamily = FontFamily(Font(R.font.nunito_light)),
+                                    fontWeight = FontWeight.Bold
+                                )
+                            }
+                        }
+
                     }
+                }
                     Spacer(modifier = Modifier.height(10.dp))
                     Button(
                         onClick = {
@@ -323,12 +335,13 @@ fun Dash_main(navController: NavController) {
                                         )
                                         Spacer(modifier = Modifier.width(17.dp))
                                         Text(
-                                            text = "$thisweekannouncements announcements",
+                                            text = "${data.thisWeekAnnouncements} announcements",
                                             color = colorResource(id = R.color.grey),
                                             fontSize = 17.sp,
                                             fontFamily = FontFamily(Font(R.font.nunito_light)),
                                             fontWeight = FontWeight.Bold
                                         )
+
                                     }
                                 }
                                 Spacer(modifier = Modifier.height(4.dp))
@@ -344,7 +357,7 @@ fun Dash_main(navController: NavController) {
                                         )
                                         Spacer(modifier = Modifier.width(17.dp))
                                         Text(
-                                            text = "$lastweekannouncements announcements",
+                                            text = "${data.lastWeekAnnouncements} announcements",
                                             color = colorResource(id = R.color.grey),
                                             fontSize = 17.sp,
                                             fontFamily = FontFamily(Font(R.font.nunito_light)),
@@ -404,7 +417,7 @@ fun Dash_main(navController: NavController) {
                                 fontSize = 15.sp
                             )
                             Text(
-                                text = user,
+                                text = data.user,
                                 fontSize = 15.sp
                             )
                         }
@@ -416,7 +429,7 @@ fun Dash_main(navController: NavController) {
                                 fontSize = 15.sp
                             )
                             Text(
-                                text = email,
+                                text = data.email,
                                 fontSize = 15.sp
                             )
                         }

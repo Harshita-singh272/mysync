@@ -43,19 +43,16 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.igdtuw.mysync.R
+import com.igdtuw.mysync.viewmodel.DashboardViewModel
 
 
 @Composable
 fun Dash_main_Cr(navController: NavController) {
-    val user = "06901012025"
-    val email = "harshitasinghixa@gmail.com"
     var showprofile by remember {
         mutableStateOf(false)
     }
-    val branch = "CSE-1"
-    val total = 77
-    val thisweekannouncements = 4
-    val lastweekannouncements = 7
+    val viewModel: DashboardViewModel = androidx.lifecycle.viewmodel.compose.viewModel()
+    val data = viewModel.dashboardData.value
     val context = LocalContext.current
     Box(modifier = Modifier.fillMaxSize()) {
         LazyColumn(
@@ -252,7 +249,7 @@ fun Dash_main_Cr(navController: NavController) {
                                     )
                                     Spacer(modifier = Modifier.width(8.dp))
                                     Text(
-                                        text = branch,
+                                        text = data.branch,
                                         color = colorResource(id = R.color.grey),
                                         fontSize = 15.sp,
                                         fontFamily = FontFamily(Font(R.font.nunito_light)),
@@ -273,7 +270,7 @@ fun Dash_main_Cr(navController: NavController) {
                                     )
                                     Spacer(modifier = Modifier.width(5.dp))
                                     Text(
-                                        text = "$total",
+                                        text = "${data.total}",
                                         color = colorResource(id = R.color.grey),
                                         fontSize = 15.sp,
                                         fontFamily = FontFamily(Font(R.font.nunito_light)),
@@ -340,7 +337,7 @@ fun Dash_main_Cr(navController: NavController) {
                                         )
                                         Spacer(modifier = Modifier.width(17.dp))
                                         Text(
-                                            text = "$thisweekannouncements announcements",
+                                            text = "${data.thisWeekAnnouncements} announcements",
                                             color = colorResource(id = R.color.grey),
                                             fontSize = 17.sp,
                                             fontFamily = FontFamily(Font(R.font.nunito_light)),
@@ -361,7 +358,7 @@ fun Dash_main_Cr(navController: NavController) {
                                         )
                                         Spacer(modifier = Modifier.width(17.dp))
                                         Text(
-                                            text = "$lastweekannouncements announcements",
+                                            text = "${data.lastWeekAnnouncements} announcements",
                                             color = colorResource(id = R.color.grey),
                                             fontSize = 17.sp,
                                             fontFamily = FontFamily(Font(R.font.nunito_light)),
@@ -420,7 +417,7 @@ fun Dash_main_Cr(navController: NavController) {
                                     fontSize = 15.sp
                                 )
                                 Text(
-                                    text = user,
+                                    text = data.user,
                                     fontSize = 15.sp
                                 )
                             }
@@ -432,7 +429,7 @@ fun Dash_main_Cr(navController: NavController) {
                                     fontSize = 15.sp
                                 )
                                 Text(
-                                    text = email,
+                                    text = data.email,
                                     fontSize = 15.sp
                                 )
                             }

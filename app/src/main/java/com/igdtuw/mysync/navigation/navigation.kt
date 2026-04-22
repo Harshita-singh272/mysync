@@ -10,7 +10,6 @@ import com.igdtuw.mysync.screen.Login
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import com.igdtuw.mysync.screen.AdminAssignmentScreen
-import com.igdtuw.mysync.screen.Announcement
 import com.igdtuw.mysync.screen.AssignmentScreen
 import com.igdtuw.mysync.screen.CRScreen
 import com.igdtuw.mysync.screen.Dash_main_Cr
@@ -20,13 +19,16 @@ import com.igdtuw.mysync.screen.StudentScreen
 import com.igdtuw.mysync.screen.Syllabusblock
 import com.igdtuw.mysync.screen.Timetableblock
 import com.igdtuw.mysync.screen.ViewAnnouncementScreen
+import com.igdtuw.mysync.viewmodel.AnnouncementViewModel
 import com.igdtuw.mysync.viewmodel.AttendanceViewModel
 import com.igdtuw.mysync.viewmodel.DashboardViewModel
+
 
 @Composable
 fun AppNavigation() {
     val navController = rememberNavController()
     val dashboardViewModel: DashboardViewModel = viewModel()
+    val announcementViewModel: AnnouncementViewModel = viewModel()
 
     NavHost(
         navController = navController,
@@ -53,9 +55,7 @@ fun AppNavigation() {
         }
 
         composable("announcements") {
-            ViewAnnouncementScreen(
-                announcements = emptyList()
-            )
+            ViewAnnouncementScreen(announcementViewModel)
         }
         composable(route = "attendance") {
             val vm: AttendanceViewModel = viewModel()
@@ -77,7 +77,7 @@ fun AppNavigation() {
         }
 
         composable("cr_announcements") {
-            PostAnnouncementScreen()
+            PostAnnouncementScreen(announcementViewModel)
         }
         composable("student_cr") {
             Dash_main_Cr(navController, dashboardViewModel)

@@ -1,5 +1,5 @@
 package com.igdtuw.mysync.screen
-
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -26,32 +26,15 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.igdtuw.mysync.R
+import com.igdtuw.mysync.model.Announcement
+import com.igdtuw.mysync.viewmodel.AnnouncementViewModel
 
-data class Announcement(val title:String, val des:String)
-class AnnouncementViewModel : ViewModel() {
-
-    private val _announcements = mutableStateListOf<Announcement>()
-    val announcements: List<Announcement> = _announcements
-
-    fun addAnnouncement(title: String, description: String) {
-        _announcements.add(Announcement(title, description))
-    }
-
-    fun deleteAnnouncement(announcement: Announcement) {
-        _announcements.remove(announcement)
-    }
-
-    fun updateAnnouncement(old: Announcement, newTitle: String, newDesc: String) {
-        val index = _announcements.indexOf(old)
-        if (index != -1) {
-            _announcements[index] = Announcement(newTitle, newDesc)
-        }
-    }
-}
 @Composable
-fun ViewAnnouncementScreen(announcements: List<Announcement>) {
+fun ViewAnnouncementScreen(viewModel: AnnouncementViewModel) {
 
+    val announcements = viewModel.announcements
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -119,15 +102,3 @@ fun ViewAnnouncementScreen(announcements: List<Announcement>) {
     }
 }
 
-@Preview(showBackground = true, showSystemUi = true)
-@Composable
-fun PreviewViewScreen() {
-
-    val sampleList = listOf(
-        Announcement("Announcement 1", "Team meeting at 5 PM"),
-        Announcement("Announcement 2", "Hackathon tomorrow"),
-        Announcement("Announcement 3", "Submit assignment")
-    )
-
-    ViewAnnouncementScreen(sampleList)
-}

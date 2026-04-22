@@ -25,13 +25,6 @@ import androidx.compose.ui.platform.LocalContext
 @Composable
 fun SplashScreen(navController: NavController) {
 
-//    LaunchedEffect(Unit) {
-//        delay(1000) // 3 seconds delay
-//
-//        navController.navigate("login") {
-//            popUpTo("splash") { inclusive = true}
-//        }
-//    }
     val context = LocalContext.current
     val prefs = context.getSharedPreferences("app_prefs", Context.MODE_PRIVATE)
 

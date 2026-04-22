@@ -20,8 +20,10 @@ import com.igdtuw.mysync.screen.StudentScreen
 import com.igdtuw.mysync.screen.Syllabusblock
 import com.igdtuw.mysync.screen.Timetableblock
 import com.igdtuw.mysync.screen.ViewAnnouncementScreen
+import com.igdtuw.mysync.viewmodel.AssignmentViewModel
 import com.igdtuw.mysync.viewmodel.AttendanceViewModel
 import com.igdtuw.mysync.viewmodel.DashboardViewModel
+import kotlin.collections.mutableListOf
 
 @Composable
 fun AppNavigation() {
@@ -46,9 +48,13 @@ fun AppNavigation() {
             Dash_CR(navController, dashboardViewModel)
         }
         composable("assignment") {
+            val vm: com.igdtuw.mysync.viewmodel.AssignmentViewModel = viewModel()
+
             AssignmentScreen(
-                subjects = emptyList(),
-                onEditClick = {}
+                viewModel = vm,
+                onEditClick = {
+
+                }
             )
         }
 
@@ -65,8 +71,10 @@ fun AppNavigation() {
         }
 
         composable("cr_assignment") {
+            val vm: AssignmentViewModel = viewModel()
+
             AdminAssignmentScreen(
-                subjects = mutableListOf(),
+                viewModel = vm,
                 onBack = { navController.popBackStack() }
             )
         }

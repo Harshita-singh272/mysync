@@ -47,12 +47,11 @@ import com.igdtuw.mysync.viewmodel.DashboardViewModel
 
 
 @Composable
-fun Dash_main_Cr(navController: NavController) {
+fun Dash_main_Cr(navController: NavController,dashboardViewModel: DashboardViewModel) {
     var showprofile by remember {
         mutableStateOf(false)
     }
-    val viewModel: DashboardViewModel = androidx.lifecycle.viewmodel.compose.viewModel()
-    val data = viewModel.dashboardData.value
+    val data = dashboardViewModel.dashboardData.value
     val context = LocalContext.current
     Box(modifier = Modifier.fillMaxSize()) {
         LazyColumn(
@@ -437,7 +436,9 @@ fun Dash_main_Cr(navController: NavController) {
                             Button(
                                 onClick = {
                                     navController.navigate("login") {
-                                        popUpTo("login") { inclusive = true }
+                                        popUpTo(navController.graph.startDestinationId) {
+                                            inclusive = true
+                                        }
                                     }
                                 },
                                 modifier = Modifier.fillMaxWidth(),

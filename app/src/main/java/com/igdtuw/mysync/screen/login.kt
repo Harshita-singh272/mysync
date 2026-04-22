@@ -1,5 +1,6 @@
 package com.igdtuw.mysync.screen
 
+import android.content.Context
 import android.content.Intent
 import android.widget.Toast
 import androidx.compose.foundation.background
@@ -44,10 +45,12 @@ import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.navigation.NavController
+import com.igdtuw.mysync.viewmodel.DashboardViewModel
 import kotlin.jvm.java
 
 @Composable
-fun Login(navController: NavController) {
+fun Login(navController: NavController,dashboardViewModel: DashboardViewModel
+) {
     val context = LocalContext.current
     var expanded by remember {
         mutableStateOf(false)
@@ -61,7 +64,7 @@ fun Login(navController: NavController) {
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .background(colorResource(id = R.color.cream)),
+            .background(colorResource(id = R.color.light_olive)),
         horizontalAlignment = Alignment.CenterHorizontally,
 
         ) {
@@ -164,9 +167,34 @@ fun Login(navController: NavController) {
                         Toast.makeText(context, "Enter password", Toast.LENGTH_SHORT).show()
                     }
                     else -> {
+                        val prefs = context.getSharedPreferences("app_prefs", Context.MODE_PRIVATE)
+                        prefs.edit()
+                            .putBoolean("is_logged_in", true)
+                            .putString("role", selectedRole)
+                            .apply()
+                        dashboardViewModel.setUserData(
+                            enrollmentNumber,
+                            password
+                        )
                         when (selectedRole) {
-                            "Student" -> navController.navigate("student")
-                            "Class Representative" -> navController.navigate("cr")
+                            "Student" -> {
+//                                navController.navigate("student") {
+//                                    popUpTo(navController.graph.startDestinationId) {
+//                                        inclusive = true
+//                                    }
+//                                }
+                                navController.navigate("student") {
+                                    popUpTo("login") { inclusive = true }
+                                    launchSingleTop = true
+                                }
+                            }
+                            "Class Representative" -> {
+                                navController.navigate("cr") {
+                                    popUpTo(navController.graph.startDestinationId) {
+                                        inclusive = true
+                                    }
+                                }
+                            }
                         }
                     }
                 }

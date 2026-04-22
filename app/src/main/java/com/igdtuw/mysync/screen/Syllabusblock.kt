@@ -45,6 +45,8 @@ import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.viewmodel.compose.viewModel
+import com.igdtuw.mysync.viewmodel.SyllabusViewModel
 
 @Composable
 fun Syllabusblock() {
@@ -96,99 +98,76 @@ fun Syllabusblock() {
                         )
                     }
                 }
-                Syllabusdp()
+
+
+                Spacer(modifier = Modifier.height(10.dp))
+                val viewModel: SyllabusViewModel = viewModel()
+                Syllabusdp(viewModel)
                 Row(
                     modifier = Modifier.fillMaxWidth(),
                     horizontalArrangement = Arrangement.End
                 ) {
-                    Button(
-                        onClick = {},
-                        colors = androidx.compose.material3.ButtonDefaults.buttonColors(
-                            colorResource(id = R.color.olive)
-                        )
-                    ) {
-                        Text("Open")
-                    }
+                Button(
+                    onClick = {
+                        val subject = viewModel.selectedSubject.value
+
+                        if (subject == "Please choose your subject") {
+                            Toast.makeText(context, "Please select a subject", Toast.LENGTH_SHORT).show()
+                        } else {
+                            // 👉 Here you navigate or fetch syllabus
+                            Toast.makeText(context, "Opening $subject", Toast.LENGTH_SHORT).show()
+                        }
+                    },
+                    colors = ButtonDefaults.buttonColors(colorResource(id = R.color.olive))
+                ) {
+                    Text("Open")
+                }
                 }
             }
         }
     }
 }
 @Composable
-fun Syllabusdp(){
-    var expanded by remember {
-        mutableStateOf(false)
-    }
-    var selectsubject by remember {
-        mutableStateOf("Please choose your subject")
-    }
+fun Syllabusdp(viewModel: SyllabusViewModel) {
+
+    val expanded = viewModel.isExpanded.value
+    val selectedSubject = viewModel.selectedSubject.value
+
     Box(
-        modifier = Modifier.padding(10.dp)
+        modifier = Modifier
+            .padding(10.dp)
             .fillMaxWidth()
-            .border(2.dp, color = colorResource(id =R.color.sage_green), shape = RoundedCornerShape(10.dp))
-    ){
+            .border(2.dp, color = colorResource(id = R.color.sage_green), shape = RoundedCornerShape(10.dp))
+    ) {
+
         Text(
-            text = selectsubject,
+            text = selectedSubject,
             modifier = Modifier.align(Alignment.Center),
             fontSize = 16.sp,
-            color = colorResource(id= R.color.dark_grey)
+            color = colorResource(id = R.color.dark_grey)
         )
-        IconButton(onClick = {expanded = !expanded }) {
+
+        IconButton(onClick = { viewModel.toggleDropdown() }) {
             Icon(
                 Icons.Default.ArrowDropDown,
                 contentDescription = "Subjects",
-                modifier = Modifier
-                    .padding(10.dp),
+                modifier = Modifier.padding(10.dp),
                 tint = colorResource(id = R.color.olive)
             )
         }
+
         DropdownMenu(
             expanded = expanded,
-            onDismissRequest = { expanded = false }
+            onDismissRequest = { viewModel.closeDropdown() }
         ) {
-            DropdownMenuItem(
-                text = { Text("Mobile Application Development") },
-                onClick = { /* Do something... */
-                    expanded = false
-                    selectsubject = "Mobile Application Development"
-                }
-            )
-            DropdownMenuItem(
-                text = { Text("Probability and Statistics") },
-                onClick = {
-                    expanded = false
-                    selectsubject = "Probability and Statistics"
-                }
-            )
-            DropdownMenuItem(
-                text = { Text("Environment science") },
-                onClick = { /* Do something... */
-                    expanded = false
-                    selectsubject = "Environment science"
-                }
-            )
-            DropdownMenuItem(
-                text = { Text("Soft skills and personality development") },
-                onClick = { /* Do something... */
-                    expanded = false
-                    selectsubject = "Soft skills and personality development"
-                }
-            )
-            DropdownMenuItem(
-                text = { Text("Introduction to data science") },
-                onClick = { /* Do something... */
-                    expanded = false
-                    selectsubject = "Introduction to data science"
-                }
-            )
-            DropdownMenuItem(
-                text = { Text("Data Structure") },
-                onClick = { /* Do something... */
-                    expanded = false
-                    selectsubject = "Data Structure"
-                }
-            )
+            viewModel.subjects.forEach { subject ->
+                DropdownMenuItem(
+                    text = { Text(subject) },
+                    onClick = {
+                        viewModel.onSubjectSelected(subject)
+                    }
+                )
+            }
         }
     }
-
 }

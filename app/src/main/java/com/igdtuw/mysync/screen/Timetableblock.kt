@@ -1,5 +1,6 @@
 package com.igdtuw.mysync.screen
 
+import android.widget.Toast
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
@@ -17,6 +18,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowDropDown
 import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.Icon
@@ -39,15 +41,21 @@ import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.igdtuw.mysync.R
+import com.igdtuw.mysync.viewmodel.TimetableViewModel
 
 
 @Composable
 fun Timetableblock() {
     val context = LocalContext.current
     Spacer(modifier = Modifier.height(10.dp))
-    Column(modifier=Modifier.padding(start= 5.dp,
-        end = 5.dp)) {
+    Column(
+        modifier = Modifier.padding(
+            start = 5.dp,
+            end = 5.dp
+        )
+    ) {
         Box(
             modifier = Modifier.fillMaxWidth(0.97f)
                 .wrapContentHeight()
@@ -92,17 +100,25 @@ fun Timetableblock() {
                         )
                     }
                 }
-                Timetabledrop()
+                Spacer(modifier = Modifier.height(10.dp))
+                val viewModel: TimetableViewModel = viewModel()
+                Timetabledrop(viewModel)
 
                 Row(
                     modifier = Modifier.fillMaxWidth(),
                     horizontalArrangement = Arrangement.End
                 ) {
                     Button(
-                        onClick = {},
-                        colors = androidx.compose.material3.ButtonDefaults.buttonColors(
-                            colorResource(id = R.color.olive)
-                        )
+                        onClick = {
+                            val branch = viewModel.selectedBranch.value
+
+                            if (branch == "Choose your branch") {
+                                Toast.makeText(context, "Choose a branch", Toast.LENGTH_SHORT).show()
+                            } else {
+                                Toast.makeText(context, "Opening $branch timetable", Toast.LENGTH_SHORT).show()
+                            }
+                        },
+                        colors = ButtonDefaults.buttonColors(colorResource(id = R.color.olive))
                     ) {
                         Text("Open")
                     }
@@ -110,50 +126,96 @@ fun Timetableblock() {
             }
         }
     }
-}
-@Composable
-fun Timetabledrop(){
-    var expanded by remember {
-        mutableStateOf(false)
     }
-    var branch by remember {
-        mutableStateOf("Choose your branch")
-    }
-    Box(
-        modifier = Modifier.padding(
-            top=10.dp,
-            bottom =10.dp,
-            start= 10.dp,
-            )
-            .fillMaxWidth()
-            .border(2.dp, color = colorResource(id =R.color.sage_green) , shape = RoundedCornerShape(15.dp))
-    ){
-        Text(
-            text = branch,
-            modifier = Modifier.align(Alignment.Center),
-            fontSize = 16.sp,
-            color = colorResource(id= R.color.dark_grey)
-        )
-        IconButton(onClick = {expanded = !expanded }) {
-            Icon(
-                Icons.Default.ArrowDropDown,
-                contentDescription = "Subjects",
-                modifier = Modifier
-//                .fillMaxWidth(),
-                    .padding(10.dp),
-                tint = colorResource(id = R.color.sage_green)
-            )
-        }
-        DropdownMenu(
-            expanded = expanded,
-            onDismissRequest = { expanded = false }
+//@Composable
+//fun Timetabledrop(){
+//    var expanded by remember {
+//        mutableStateOf(false)
+//    }
+//    var branch by remember {
+//        mutableStateOf("Choose your branch")
+//    }
+//    Box(
+//        modifier = Modifier.padding(
+//            top=10.dp,
+//            bottom =10.dp,
+//            start= 10.dp,
+//            )
+//            .fillMaxWidth()
+//            .border(2.dp, color = colorResource(id =R.color.sage_green) , shape = RoundedCornerShape(15.dp))
+//    ){
+//        Text(
+//            text = branch,
+//            modifier = Modifier.align(Alignment.Center),
+//            fontSize = 16.sp,
+//            color = colorResource(id= R.color.dark_grey)
+//        )
+//        IconButton(onClick = {expanded = !expanded }) {
+//            Icon(
+//                Icons.Default.ArrowDropDown,
+//                contentDescription = "Subjects",
+//                modifier = Modifier
+////                .fillMaxWidth(),
+//                    .padding(10.dp),
+//                tint = colorResource(id = R.color.sage_green)
+//            )
+//        }
+//        DropdownMenu(
+//            expanded = expanded,
+//            onDismissRequest = { expanded = false }
+//        ) {
+//            listOf("   Cse-1   ", "   Cse-2   ", "   Cse-3   ", "   CseAi-1   ", "   CseAi-2   ", "   CseAi-3   ").forEach {b->
+//                DropdownMenuItem(text = { Text(text = b) }, onClick = {
+//                    branch = b
+//                    expanded = false
+//                })
+//            }
+//        }
+//    }
+//}
+    @Composable
+    fun Timetabledrop(viewModel: TimetableViewModel) {
+
+        val expanded = viewModel.isExpanded.value
+        val branch = viewModel.selectedBranch.value
+
+        Box(
+            modifier = Modifier
+                .padding(top = 10.dp, bottom = 10.dp, start = 10.dp)
+                .fillMaxWidth()
+                .border(
+                    2.dp,
+                    color = colorResource(id = R.color.sage_green),
+                    shape = RoundedCornerShape(15.dp)
+                )
         ) {
-            listOf("   Cse-1   ", "   Cse-2   ", "   Cse-3   ", "   CseAi-1   ", "   CseAi-2   ", "   CseAi-3   ").forEach {b->
-                DropdownMenuItem(text = { Text(text = b) }, onClick = {
-                    branch = b
-                    expanded = false
-                })
+
+            Text(
+                text = branch,
+                modifier = Modifier.align(Alignment.Center),
+                fontSize = 16.sp,
+                color = colorResource(id = R.color.dark_grey)
+            )
+
+            IconButton(onClick = { viewModel.toggleDropdown() }) {
+                Icon(
+                    Icons.Default.ArrowDropDown,
+                    contentDescription = "Branch",
+                    modifier = Modifier.padding(10.dp),
+                    tint = colorResource(id = R.color.sage_green)
+                )
+            }
+
+            DropdownMenu(
+                expanded = expanded,
+                onDismissRequest = { viewModel.closeDropdown() }
+            ) {
+                viewModel.branches.forEach { b ->
+                    DropdownMenuItem(
+                        text = { Text(text = b) },
+                        onClick = { viewModel.onBranchSelected(b) }
+                    )
+                }
             }
         }
     }
-}

@@ -21,8 +21,6 @@ import com.igdtuw.mysync.screen.Timetableblock
 import com.igdtuw.mysync.screen.ViewAnnouncementScreen
 import com.igdtuw.mysync.viewmodel.AttendanceViewModel
 
-
-
 @Composable
 fun AppNavigation() {
     val navController = rememberNavController()

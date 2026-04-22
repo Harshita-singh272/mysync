@@ -50,17 +50,9 @@ import com.igdtuw.mysync.viewmodel.DashboardViewModel
 @Composable
 fun Dash_main(navController: NavController, dashboardViewModel: DashboardViewModel
 ) {
-//    val user = "06901012025"
-//    val email = "harshitasinghixa@gmail.com"
     var showprofile by remember {
         mutableStateOf(false)
     }
-//    val branch = "CSE-1"
-//    val total = 77
-//    val thisweekannouncements = 4
-//    val lastweekannouncements = 7
-//    val viewModel: DashboardViewModel = androidx.lifecycle.viewmodel.compose.viewModel()
-//    val data = viewModel.dashboardData.value
     val data = dashboardViewModel.dashboardData.value
     val context = LocalContext.current
     Box(modifier = Modifier.fillMaxSize()) {

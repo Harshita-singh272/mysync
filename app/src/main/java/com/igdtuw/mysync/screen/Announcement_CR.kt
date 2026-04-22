@@ -1,5 +1,6 @@
 package com.igdtuw.mysync.screen
-
+import androidx.lifecycle.viewmodel.compose.viewModel
+import com.igdtuw.mysync.viewmodel.AnnouncementViewModel
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -17,9 +18,10 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.igdtuw.mysync.R
-
+import com.igdtuw.mysync.model.Announcement
 @Composable
-fun PostAnnouncementScreen() {
+fun PostAnnouncementScreen(viewModel: AnnouncementViewModel) {
+
     var title by remember { mutableStateOf("") }
     var description by remember { mutableStateOf("") }
 
@@ -92,8 +94,11 @@ fun PostAnnouncementScreen() {
 
             Button(
                 onClick = {
-                    title = ""
-                    description = ""
+                    if (title.isNotBlank() && description.isNotBlank()) {
+                        viewModel.addAnnouncement(title, description)
+                        title = ""
+                        description = ""
+                    }
                 },
                 modifier = Modifier
                     .fillMaxWidth()
@@ -114,8 +119,3 @@ fun PostAnnouncementScreen() {
     }
 }
 
-@Preview(showBackground = true, showSystemUi = true)
-@Composable
-fun PreviewPostScreen() {
-    PostAnnouncementScreen()
-}

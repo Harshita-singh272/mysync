@@ -1,4 +1,5 @@
 package com.igdtuw.mysync.screen
+import com.google.firebase.firestore.FirebaseFirestore
 import android.widget.Toast
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -90,14 +91,16 @@ fun Login(navController: NavController, dashboardViewModel: DashboardViewModel) 
 
         // Email Field
         OutlinedTextField(
-            value = email,
+            value = email, // or password
             onValueChange = { email = it },
-            placeholder = { Text("University Email ID") },
-            textStyle = LocalTextStyle.current.copy(fontSize = 18.sp, fontWeight = FontWeight.Bold),
+            placeholder = { Text(" Enter University Email ID") },
+            textStyle = LocalTextStyle.current.copy(fontSize = 16.sp, fontWeight = FontWeight.Bold),
+            singleLine = true, // Prevents vertical stretching
+            maxLines = 1,
             modifier = Modifier
-                .width(250.dp)
-                .height(50.dp)
-                .shadow(4.dp, RoundedCornerShape(24.dp)),
+                .fillMaxWidth(0.8f) // Uses 80% of screen width, safer than 250.dp
+                .shadow(4.dp, RoundedCornerShape(24.dp))
+                .background(Color.White, RoundedCornerShape(24.dp)),
             shape = RoundedCornerShape(24.dp),
             colors = OutlinedTextFieldDefaults.colors(
                 unfocusedBorderColor = colorResource(id = R.color.sage_green),
@@ -111,15 +114,16 @@ fun Login(navController: NavController, dashboardViewModel: DashboardViewModel) 
 
         // Password Field
         OutlinedTextField(
-            value = password,
+            value = password, // or password
             onValueChange = { password = it },
-            visualTransformation = PasswordVisualTransformation(),
-            placeholder = { Text("Password") },
-            textStyle = LocalTextStyle.current.copy(fontSize = 18.sp, fontWeight = FontWeight.Bold),
+            placeholder = { Text("Enter Password") },
+            textStyle = LocalTextStyle.current.copy(fontSize = 16.sp, fontWeight = FontWeight.Bold),
+            singleLine = true, // Prevents vertical stretching
+            maxLines = 1,
             modifier = Modifier
-                .width(250.dp)
-                .height(50.dp)
-                .shadow(4.dp, RoundedCornerShape(24.dp)),
+                .fillMaxWidth(0.8f) // Uses 80% of screen width, safer than 250.dp
+                .shadow(4.dp, RoundedCornerShape(24.dp))
+                .background(Color.White, RoundedCornerShape(24.dp)),
             shape = RoundedCornerShape(24.dp),
             colors = OutlinedTextFieldDefaults.colors(
                 unfocusedBorderColor = colorResource(id = R.color.sage_green),
@@ -152,33 +156,45 @@ fun Login(navController: NavController, dashboardViewModel: DashboardViewModel) 
                         Toast.makeText(context, "Enter your Password", Toast.LENGTH_SHORT).show()
                     }
                     else -> {
-                        // This is the Firebase magic
+                        val db = FirebaseFirestore.getInstance()
+
                         auth.signInWithEmailAndPassword(email, password)
                             .addOnCompleteListener { task ->
                                 if (task.isSuccessful) {
-                                    // 1. Save login state locally
-                                    val prefs = context.getSharedPreferences("app_prefs", android.content.Context.MODE_PRIVATE)
-                                    prefs.edit()
-                                        .putBoolean("is_logged_in", true)
-                                        .putString("role", selectedRole)
-                                        .apply()
+                                    // Login was successful, now check the role in Firestore
+                                    db.collection("users").document(email).get()
+                                        .addOnSuccessListener { document ->
+                                            if (document != null && document.exists()) {
+                                                val dbRole = document.getString("role") // This gets "CR" or "Student"
 
-                                    // 2. Update the Dashboard data
-                                    dashboardViewModel.setUserData(email, password)
+                                                // SECURITY CHECK: Does the selected role match the DB role?
+                                                // We normalize the strings (CR vs Class Representative)
+                                                val isCR = selectedRole == "Class Representative" && dbRole == "CR"
+                                                val isStudent = selectedRole == "Student" && dbRole == "Student"
 
-                                    // 3. Move to the correct Dashboard
-                                    if (selectedRole == "Student") {
-                                        navController.navigate("student") {
-                                            popUpTo("login") { inclusive = true }
+                                                if (isCR || isStudent) {
+                                                    // Role matches! Proceed to Dashboard
+                                                    dashboardViewModel.setUserData(email, password)
+                                                    val route = if (dbRole == "CR") "cr" else "student"
+
+                                                    navController.navigate(route) {
+                                                        popUpTo("login") { inclusive = true }
+                                                    }
+                                                } else {
+                                                    // Role mismatch
+                                                    auth.signOut() // Kick them out
+                                                    Toast.makeText(context, "Unauthorized role for this ID", Toast.LENGTH_LONG).show()
+                                                }
+                                            } else {
+                                                auth.signOut()
+                                                Toast.makeText(context, "User profile not found in database", Toast.LENGTH_LONG).show()
+                                            }
                                         }
-                                    } else {
-                                        navController.navigate("cr") {
-                                            popUpTo("login") { inclusive = true }
+                                        .addOnFailureListener {
+                                            Toast.makeText(context, "Database Error", Toast.LENGTH_SHORT).show()
                                         }
-                                    }
                                 } else {
-                                    // If password is wrong or user isn't in your Firebase List
-                                    Toast.makeText(context, "Login Failed: Check email or password", Toast.LENGTH_LONG).show()
+                                    Toast.makeText(context, "Auth Failed: ${task.exception?.message}", Toast.LENGTH_SHORT).show()
                                 }
                             }
                     }

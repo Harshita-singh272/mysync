@@ -1,6 +1,4 @@
 package com.igdtuw.mysync.screen
-
-import android.content.Context
 import android.widget.Toast
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -30,7 +28,7 @@ import com.igdtuw.mysync.viewmodel.DashboardViewModel
 @Composable
 fun Login(navController: NavController, dashboardViewModel: DashboardViewModel) {
     val context = LocalContext.current
-    val auth = remember { FirebaseAuth.getInstance() }
+
 
     var expanded by remember { mutableStateOf(false) }
     var selectedRole by remember { mutableStateOf("Role") }
@@ -135,34 +133,52 @@ fun Login(navController: NavController, dashboardViewModel: DashboardViewModel) 
 
         // Login Button
         Button(
+            // Inside your Button in login.kt
             onClick = {
+                val auth = FirebaseAuth.getInstance()
+
                 when {
-                    selectedRole == "Role" -> Toast.makeText(context, "Select a role", Toast.LENGTH_SHORT).show()
-                    email.isBlank() || !email.endsWith("@igdtuw.ac.in") -> {
-                        Toast.makeText(context, "Enter a valid @igdtuw.ac.in email", Toast.LENGTH_SHORT).show()
+                    selectedRole == "Role" -> {
+                        Toast.makeText(context, "Please select a role", Toast.LENGTH_SHORT).show()
                     }
-                    password.length < 6 -> {
-                        Toast.makeText(context, "Password must be at least 6 characters", Toast.LENGTH_SHORT).show()
+                    email.isBlank() -> {
+                        Toast.makeText(context, "Enter your Email", Toast.LENGTH_SHORT).show()
+                    }
+                    // SAFETY CHECK: Only allows IGDTUW IDs
+                    !email.endsWith("@igdtuw.ac.in") -> {
+                        Toast.makeText(context, "Use your @igdtuw.ac.in ID", Toast.LENGTH_SHORT).show()
+                    }
+                    password.isBlank() -> {
+                        Toast.makeText(context, "Enter your Password", Toast.LENGTH_SHORT).show()
                     }
                     else -> {
-                        // Firebase Authentication Logic
+                        // This is the Firebase magic
                         auth.signInWithEmailAndPassword(email, password)
                             .addOnCompleteListener { task ->
                                 if (task.isSuccessful) {
-                                    val prefs = context.getSharedPreferences("app_prefs", Context.MODE_PRIVATE)
+                                    // 1. Save login state locally
+                                    val prefs = context.getSharedPreferences("app_prefs", android.content.Context.MODE_PRIVATE)
                                     prefs.edit()
                                         .putBoolean("is_logged_in", true)
                                         .putString("role", selectedRole)
                                         .apply()
 
+                                    // 2. Update the Dashboard data
                                     dashboardViewModel.setUserData(email, password)
 
-                                    val route = if (selectedRole == "Student") "student" else "cr"
-                                    navController.navigate(route) {
-                                        popUpTo("login") { inclusive = true }
+                                    // 3. Move to the correct Dashboard
+                                    if (selectedRole == "Student") {
+                                        navController.navigate("student") {
+                                            popUpTo("login") { inclusive = true }
+                                        }
+                                    } else {
+                                        navController.navigate("cr") {
+                                            popUpTo("login") { inclusive = true }
+                                        }
                                     }
                                 } else {
-                                    Toast.makeText(context, "Login Failed: ${task.exception?.message}", Toast.LENGTH_LONG).show()
+                                    // If password is wrong or user isn't in your Firebase List
+                                    Toast.makeText(context, "Login Failed: Check email or password", Toast.LENGTH_LONG).show()
                                 }
                             }
                     }

@@ -52,6 +52,7 @@ fun StudentScreen(viewModel: AttendanceViewModel, studentName: String, studentEm
                 )
             }
         }
+        HorizontalDivider(thickness = 1.dp, color = colorResource(id = R.color.border))
         Spacer(modifier = Modifier.height(24.dp))
         Column(modifier= Modifier.padding(start= 20.dp , end = 20.dp)) {
             if (studentEmail.isEmpty()) {

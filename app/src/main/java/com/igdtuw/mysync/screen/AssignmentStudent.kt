@@ -44,7 +44,7 @@ fun AssignmentScreen(
     LazyColumn(
         modifier = Modifier
             .fillMaxSize()
-            .background(cream)
+            .background(Color(0xFFF7F9F2))
     ) {
         item {
             Box(modifier = Modifier.fillMaxWidth().background(
@@ -70,6 +70,7 @@ fun AssignmentScreen(
                     )
                 }
             }
+            HorizontalDivider(thickness = 1.dp, color = colorResource(id = R.color.border))
             Spacer(modifier = Modifier.height(10.dp))
 
         }

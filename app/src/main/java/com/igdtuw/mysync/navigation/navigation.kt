@@ -5,73 +5,65 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
-import com.igdtuw.mysync.screen.* import com.igdtuw.mysync.viewmodel.*
-import com.igdtuw.mysync.screen.AdminAssignmentScreen
-import com.igdtuw.mysync.screen.AssignmentCRScreen
-import com.igdtuw.mysync.screen.AssignmentScreen
-import com.igdtuw.mysync.screen.Announcement_CR
-import com.igdtuw.mysync.screen.Dash_main_Cr
-import com.igdtuw.mysync.screen.Announcement_Student
-import com.igdtuw.mysync.screen.SplashScreen
-import com.igdtuw.mysync.screen.StudentScreen
-import com.igdtuw.mysync.screen.Syllabusblock
-import com.igdtuw.mysync.screen.Timetableblock
-//import com.igdtuw.mysync.screen.ViewAnnouncementScreen
-import com.igdtuw.mysync.viewmodel.AssignmentViewModel
-import com.igdtuw.mysync.viewmodel.AnnouncementViewModel
-import com.igdtuw.mysync.viewmodel.AttendanceViewModel
-import com.igdtuw.mysync.viewmodel.DashboardViewModel
-import kotlin.collections.mutableListOf
-
+import com.igdtuw.mysync.screen.*
+import com.igdtuw.mysync.viewmodel.*
 
 @Composable
 fun AppNavigation() {
     val navController = rememberNavController()
+
+    // Shared ViewModels
     val dashboardViewModel: DashboardViewModel = viewModel()
     val announcementViewModel: AnnouncementViewModel = viewModel()
     val assignmentViewModel: AssignmentViewModel = viewModel()
+
     NavHost(
         navController = navController,
-        startDestination = "splashscreen"
+        // Match the route name exactly as defined below
+        startDestination = "splash"
     ) {
-        composable("splashscreen") { SplashScreen(navController) }
-        composable("login") { Login(navController, dashboardViewModel) }
-        composable("student") { Dash_main(navController, dashboardViewModel) }
-        composable("cr") { Dash_CR(navController, dashboardViewModel) }
+        // --- AUTH & STARTUP ---
+        composable("splash") {
+            SplashScreen(navController)
+        }
 
         composable("login") {
             Login(navController, dashboardViewModel)
         }
 
+        // --- DASHBOARDS ---
         composable("student") {
             Dash_main(navController, dashboardViewModel)
         }
-        composable("splashscreen") {
-            SplashScreen(navController)
-        }
+
         composable("cr") {
             Dash_CR(navController, dashboardViewModel)
         }
+
+        // --- STUDENT FEATURES ---
+        composable("announcements") {
+            Announcement_Student(announcementViewModel)
+        }
+
         composable("assignment") {
             AssignmentScreen(
                 viewModel = assignmentViewModel,
                 onEditClick = {}
             )
         }
-        // Announcements for Student
-        composable("announcements") {
-            Announcement_Student(announcementViewModel)
-        }
 
-        // Announcements for CR (Combined Post + Manage)
-        composable("cr_announcements") {
-            Announcement_CR(announcementViewModel)
-        }
-
-        // Attendance & Assignments (Keeping your existing logic)
         composable("attendance") {
             val vm: AttendanceViewModel = viewModel()
-            StudentScreen(viewModel = vm, studentName = dashboardViewModel.dashboardData.value.user)
+            // Pulling student name from dashboard state
+            StudentScreen(
+                viewModel = vm,
+                studentName = dashboardViewModel.dashboardData.value.user
+            )
+        }
+
+        // --- CR FEATURES ---
+        composable("cr_announcements") {
+            Announcement_CR(announcementViewModel)
         }
 
         composable("cr_assignment") {
@@ -85,13 +77,13 @@ fun AppNavigation() {
             val vm: AttendanceViewModel = viewModel()
             Attendance_CR(viewModel = vm)
         }
-        composable("assignmentstudent_cr"){
+
+        composable("assignmentstudent_cr") {
             AssignmentCRScreen(
                 navController = navController,
                 viewModel = assignmentViewModel,
                 onEditClick = {}
             )
         }
-
     }
 }

@@ -72,7 +72,7 @@ fun Attendance_CR(viewModel: AttendanceViewModel = viewModel()) {
     Scaffold(
         topBar = {
             Surface(shadowElevation = 6.dp, color = colorResource(id = R.color.olive), modifier = Modifier.fillMaxWidth()) {
-                Column(modifier = Modifier.padding(16.dp)) {
+                Column(modifier = Modifier.padding(start = 10.dp, end = 10.dp, top = 38.dp, bottom = 15.dp)) {
                     Text("Attendance Management", color = Color.White, fontSize = 22.sp, fontWeight = FontWeight.Bold)
                     Spacer(modifier = Modifier.height(12.dp))
                     OutlinedTextField(

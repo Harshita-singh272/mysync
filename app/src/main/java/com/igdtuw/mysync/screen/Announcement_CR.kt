@@ -17,6 +17,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.igdtuw.mysync.R
 import com.igdtuw.mysync.model.Announcement
+import com.igdtuw.mysync.ui.theme.cream
 import com.igdtuw.mysync.viewmodel.AnnouncementViewModel
 
 @Composable
@@ -51,12 +52,22 @@ fun Announcement_CR(viewModel: AnnouncementViewModel) {
         )
     }
 
-    Column(modifier = Modifier.fillMaxSize().background(colorResource(id = R.color.cream))) {
+    Column(modifier = Modifier
+        .fillMaxSize()
+        .background(cream)) {
         Box(
-            modifier = Modifier.fillMaxWidth().background(colorResource(id = R.color.sage_green)).padding(vertical = 20.dp),
+            modifier = Modifier
+                .fillMaxWidth()
+                .background(colorResource(id = R.color.sage_green))
+                .padding(start = 20.dp, top = 38.dp, bottom = 15.dp),
             contentAlignment = Alignment.Center
         ) {
-            Text("CR Announcement Board", color = Color.White, fontWeight = FontWeight.Bold, fontSize = 20.sp)
+            Text(
+                "CR Announcement Board",
+                fontWeight = FontWeight.Black,
+                color =colorResource(id= R.color.dark_olive),
+                fontSize = 20.sp
+            )
         }
 
         LazyColumn(contentPadding = PaddingValues(16.dp), verticalArrangement = Arrangement.spacedBy(12.dp)) {

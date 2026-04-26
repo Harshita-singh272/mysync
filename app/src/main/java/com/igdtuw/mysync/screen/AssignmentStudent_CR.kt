@@ -21,12 +21,15 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
+import com.igdtuw.mysync.R
 import com.igdtuw.mysync.model.AssignmentItem
 import com.igdtuw.mysync.viewmodel.AssignmentViewModel
 import com.igdtuw.mysync.ui.theme.*
@@ -66,20 +69,34 @@ fun AssignmentCRScreen(
                 .fillMaxSize()
         ) {
             item {
-                Column(modifier = Modifier.padding(24.dp)) {
-                    Text(
-                        text = "Batch Assignments",
-                        fontSize = 28.sp,
-                        fontWeight = FontWeight.ExtraBold,
-                        color = olive
-                    )
-                    Text(
-                        text = "Managing CSE '29 Curriculum",
-                        fontSize = 14.sp,
-                        color = Color.Gray
-                    )
+                Box(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .background(Color(0xFFA3B18A))
+                        .padding(start = 20.dp, top = 15.dp, bottom = 15.dp),
+                    contentAlignment = Alignment.Center
+                ) {
+                    Column(
+                        horizontalAlignment = Alignment.CenterHorizontally
+                    ) {
+                        Text(
+                            text = "Assignments",
+                            fontWeight = FontWeight.Black,
+                            fontSize = 20.sp,
+                            color = Color(0xFF344E41)
+                        )
+
+                        Spacer(modifier = Modifier.height(6.dp))
+
+                        Text(
+                            text = "Track your CSE '29 submissions",
+                            fontSize = 14.sp,
+                            color = Color(0xFF344E41).copy(alpha = 0.8f)
+                        )
+                    }
                 }
             }
+
 
             items(subjects) { subject ->
                 var expanded by remember { mutableStateOf(false) }

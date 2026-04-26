@@ -48,7 +48,7 @@ fun AssignmentScreen(
     ) {
         item {
             Box(modifier = Modifier.fillMaxWidth().background(
-//                color = colorResource(id = R.color.light_sage_gray)
+
             color = Color(0xFFA3B18A )),
                 ) {
                 Column(

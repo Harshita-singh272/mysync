@@ -78,7 +78,6 @@ fun AdminAssignmentScreen(
                 .padding(20.dp),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            // Main Entry Card
             Surface(
                 shape = RoundedCornerShape(24.dp),
                 shadowElevation = 8.dp,
@@ -95,7 +94,6 @@ fun AdminAssignmentScreen(
 
                     Spacer(modifier = Modifier.height(20.dp))
 
-                    // Subject Selector
                     Text("Select Subject", fontSize = 12.sp, color = Color.Gray)
                     Box(modifier = Modifier.fillMaxWidth().padding(vertical = 8.dp)) {
                         OutlinedCard(
@@ -125,7 +123,6 @@ fun AdminAssignmentScreen(
                         }
                     }
 
-                    // Type Toggle
                     Row(
                         modifier = Modifier.fillMaxWidth().padding(vertical = 8.dp),
                         verticalAlignment = Alignment.CenterVertically
@@ -147,7 +144,6 @@ fun AdminAssignmentScreen(
 
                     Spacer(modifier = Modifier.height(12.dp))
 
-                    // Inputs
                     OutlinedTextField(
                         value = title,
                         onValueChange = { title = it },
@@ -179,7 +175,6 @@ fun AdminAssignmentScreen(
 
                     Spacer(modifier = Modifier.height(24.dp))
 
-                    // Action Button
                     Button(
                         onClick = {
                             if (title.isNotBlank() && link.isNotBlank()) {
@@ -200,7 +195,6 @@ fun AdminAssignmentScreen(
                                     scope.launch { snackbarHostState.showSnackbar("Published to Batch") }
                                 }
 
-                                // Reset
                                 viewModel.selectedAssignment.value = null
                                 title = ""; link = ""; description = ""
                             }

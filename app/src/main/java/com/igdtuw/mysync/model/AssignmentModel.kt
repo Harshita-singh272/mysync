@@ -5,6 +5,6 @@ data class AssignmentItem(
     var title: String = "",
     var link: String = "",
     var description: String = "",
-    var subject: String = "",   // ✅ keep this
+    var subject: String = "",
     var type: String = ""
 )

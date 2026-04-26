@@ -60,7 +60,7 @@ fun Timetableblock() {
         )
     ) {
         Box(
-            modifier = Modifier .fillMaxWidth()
+            modifier = Modifier.fillMaxWidth()
                 .wrapContentWidth(Alignment.CenterHorizontally)
                 .wrapContentHeight()
                 .shadow(
@@ -113,20 +113,12 @@ fun Timetableblock() {
                     horizontalArrangement = Arrangement.End
                 ) {
                     Button(
-//                        onClick = {
-//                            val branch = viewModel.selectedBranch.value
-//
-//                            if (branch == "Choose your branch") {
-//                                Toast.makeText(context, "Choose a branch", Toast.LENGTH_SHORT).show()
-//                            } else {
-//                                Toast.makeText(context, "Opening $branch timetable", Toast.LENGTH_SHORT).show()
-//                            }
-//                        },
                         onClick = {
                             val branch = viewModel.selectedBranch.value
 
                             if (branch == "Choose your branch") {
-                                Toast.makeText(context, "Choose a branch", Toast.LENGTH_SHORT).show()
+                                Toast.makeText(context, "Choose a branch", Toast.LENGTH_SHORT)
+                                    .show()
                             } else {
                                 viewModel.loadTimetable()
 
@@ -148,53 +140,7 @@ fun Timetableblock() {
             }
         }
     }
-    }
-//@Composable
-//fun Timetabledrop(){
-//    var expanded by remember {
-//        mutableStateOf(false)
-//    }
-//    var branch by remember {
-//        mutableStateOf("Choose your branch")
-//    }
-//    Box(
-//        modifier = Modifier.padding(
-//            top=10.dp,
-//            bottom =10.dp,
-//            start= 10.dp,
-//            )
-//            .fillMaxWidth()
-//            .border(2.dp, color = colorResource(id =R.color.sage_green) , shape = RoundedCornerShape(15.dp))
-//    ){
-//        Text(
-//            text = branch,
-//            modifier = Modifier.align(Alignment.Center),
-//            fontSize = 16.sp,
-//            color = colorResource(id= R.color.dark_grey)
-//        )
-//        IconButton(onClick = {expanded = !expanded }) {
-//            Icon(
-//                Icons.Default.ArrowDropDown,
-//                contentDescription = "Subjects",
-//                modifier = Modifier
-////                .fillMaxWidth(),
-//                    .padding(10.dp),
-//                tint = colorResource(id = R.color.sage_green)
-//            )
-//        }
-//        DropdownMenu(
-//            expanded = expanded,
-//            onDismissRequest = { expanded = false }
-//        ) {
-//            listOf("   Cse-1   ", "   Cse-2   ", "   Cse-3   ", "   CseAi-1   ", "   CseAi-2   ", "   CseAi-3   ").forEach {b->
-//                DropdownMenuItem(text = { Text(text = b) }, onClick = {
-//                    branch = b
-//                    expanded = false
-//                })
-//            }
-//        }
-//    }
-//}
+}
     @Composable
     fun Timetabledrop(viewModel: TimetableViewModel) {
 

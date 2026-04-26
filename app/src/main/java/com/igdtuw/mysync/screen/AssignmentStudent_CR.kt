@@ -5,7 +5,6 @@ import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.expandVertically
 import androidx.compose.animation.shrinkVertically
 import androidx.compose.foundation.background
-import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
@@ -24,14 +23,10 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.res.colorResource
-import androidx.compose.ui.text.font.Font
-import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
-import com.igdtuw.mysync.R
 import com.igdtuw.mysync.model.AssignmentItem
 import com.igdtuw.mysync.viewmodel.AssignmentViewModel
 import com.igdtuw.mysync.ui.theme.*
@@ -91,7 +86,6 @@ fun AssignmentCRScreen(
                 val theoryList = assignments.filter { it.subject == subject && it.type == "theory" }
                 val labList = assignments.filter { it.subject == subject && it.type == "lab" }
 
-                // Subject Card
                 Surface(
                     modifier = Modifier
                         .padding(horizontal = 16.dp, vertical = 8.dp)
@@ -154,7 +148,6 @@ fun AssignmentCRScreen(
             }
         }
 
-        // Standardized Delete Dialog
         if (assignmentToDelete != null) {
             AlertDialog(
                 onDismissRequest = { assignmentToDelete = null },
@@ -209,16 +202,14 @@ fun AssignmentActionRow(
         elevation = CardDefaults.cardElevation(2.dp)
     ) {
         Column {
-            // Top Part: Assignment Details
             Box(modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp)) {
                 AssignmentItemUI(item, context)
             }
 
-            // Bottom Part: Action Box
             Box(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .background(cream.copy(alpha = 0.4f)) // Light shaded background for the "bar"
+                    .background(cream.copy(alpha = 0.4f))
                     .padding(horizontal = 8.dp, vertical = 4.dp)
             ) {
                 Row(
@@ -226,7 +217,6 @@ fun AssignmentActionRow(
                     horizontalArrangement = Arrangement.End,
                     verticalAlignment = Alignment.CenterVertically
                 ) {
-                    // Edit Button in its own small box
                     Surface(
                         shape = RoundedCornerShape(8.dp),
                         color = Color.White,
@@ -248,10 +238,9 @@ fun AssignmentActionRow(
 
                     Spacer(modifier = Modifier.width(12.dp))
 
-                    // Delete Button in its own small box
                     Surface(
                         shape = RoundedCornerShape(8.dp),
-                        color = Color(0xFFFFF1F1), // Slight red tint for delete
+                        color = Color(0xFFFFF1F1),
                         modifier = Modifier
                             .size(36.dp)
                             .clickable { onDelete(item) },
@@ -292,7 +281,7 @@ fun AssignmentItemUI(item: AssignmentItem, context: android.content.Context) {
     ) {
         Text(
             text = item.title,
-            color = olive, // Changed from White to Olive for visibility
+            color = olive,
             fontWeight = FontWeight.Bold,
             fontSize = 16.sp
         )
@@ -300,7 +289,7 @@ fun AssignmentItemUI(item: AssignmentItem, context: android.content.Context) {
             Spacer(modifier = Modifier.height(2.dp))
             Text(
                 text = item.description,
-                color = Color.DarkGray.copy(alpha = 0.8f), // Changed from White to DarkGray
+                color = Color.DarkGray.copy(alpha = 0.8f),
                 fontSize = 13.sp,
                 lineHeight = 18.sp
             )

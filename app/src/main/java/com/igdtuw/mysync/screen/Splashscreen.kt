@@ -20,36 +20,34 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.igdtuw.mysync.R
+import com.igdtuw.mysync.viewmodel.DashboardViewModel
 import kotlinx.coroutines.delay
-
 @Composable
-fun SplashScreen(navController: NavController) {
+fun SplashScreen(navController: NavController, dashboardViewModel: DashboardViewModel) {
     val context = LocalContext.current
-
-    // 1. Properly initialize the alpha animation state
     val alphaAnim = remember { Animatable(0f) }
 
-    LaunchedEffect(key1 = true) {
-        alphaAnim.animateTo(1f, animationSpec = tween(1500))
+    LaunchedEffect(true) {
+        alphaAnim.animateTo(1f, tween(1500))
         delay(1000)
 
         val sharedPref = context.getSharedPreferences("MySyncPrefs", Context.MODE_PRIVATE)
         val savedEmail = sharedPref.getString("user_email", null)
         val savedRole = sharedPref.getString("user_role", null)
 
-        // ONLY go to dashboard if BOTH email and role exist
         if (!savedEmail.isNullOrEmpty() && !savedRole.isNullOrEmpty()) {
+
+            dashboardViewModel.setUserData(savedEmail, "auto_login")
+
             navController.navigate(savedRole.lowercase()) {
                 popUpTo("splash") { inclusive = true }
             }
         } else {
-            // Otherwise, ALWAYS force the login screen
             navController.navigate("login") {
                 popUpTo("splash") { inclusive = true }
             }
         }
     }
-    // 3. Keep the UI inside the function (removed the extra closing bracket)
     Box(
         modifier = Modifier
             .fillMaxSize()
@@ -61,7 +59,7 @@ fun SplashScreen(navController: NavController) {
             modifier = Modifier
                 .size(300.dp)
                 .align(Alignment.Center)
-                .alpha(alphaAnim.value) // 4. Apply the animation to the logo
+                .alpha(alphaAnim.value)
         )
     }
 }

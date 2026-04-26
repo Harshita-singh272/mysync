@@ -6,7 +6,6 @@ import androidx.lifecycle.ViewModel
 import com.google.firebase.firestore.FirebaseFirestore
 import com.igdtuw.mysync.model.AttendanceRecord
 
-// Helper data class inside the same file
 data class SubjectAttendance(
     val name: String = "",
     val attended: Int = 0,
@@ -17,11 +16,8 @@ data class SubjectAttendance(
 class AttendanceViewModel : ViewModel() {
     private val db = FirebaseFirestore.getInstance()
 
-    // For CR Screen
     var studentList = mutableStateListOf<AttendanceRecord>()
     var subjects = mutableStateListOf<String>()
-
-    // For Student Screen
     var subjectAttendance = mutableStateListOf<SubjectAttendance>()
 
     init {
@@ -54,9 +50,8 @@ class AttendanceViewModel : ViewModel() {
         }
     }
 
-    // This clears the error in StudentScreen
     fun fetchStudentAttendance(studentName: String) {
-        // Initializes the list with 0s so the UI can load without crashing
+
         subjectAttendance.clear()
         subjects.forEach { subject ->
             subjectAttendance.add(SubjectAttendance(name = subject, attended = 0, total = 0, percentage = 0f))

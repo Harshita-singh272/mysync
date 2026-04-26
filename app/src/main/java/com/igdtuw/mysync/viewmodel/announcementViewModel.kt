@@ -26,7 +26,6 @@ class AnnouncementViewModel : ViewModel() {
                 value?.let {
                     announcements.clear()
                     for (doc in it) {
-                        // Ensure the mapping matches your Model exactly
                         val announcement = doc.toObject(Announcement::class.java).copy(id = doc.id)
                         announcements.add(announcement)
                     }
@@ -54,7 +53,7 @@ class AnnouncementViewModel : ViewModel() {
                 title = title,
                 description = description,
                 category = category,
-                timestamp = Timestamp.now() // Explicitly set current time
+                timestamp = Timestamp.now()
             )
             newDoc.set(announcement)
         }

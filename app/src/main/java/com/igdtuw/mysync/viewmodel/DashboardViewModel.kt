@@ -9,7 +9,6 @@ class DashboardViewModel : ViewModel() {
     var dashboardData = mutableStateOf(DashboardModel())
         private set
 
-    // Fixed to accept password again so login.kt doesn't throw "Too many arguments"
     fun setUserData(email: String, password: String) {
         val db = FirebaseFirestore.getInstance()
 
@@ -22,7 +21,7 @@ class DashboardViewModel : ViewModel() {
                     user = fullName,
                     email = email,
                     branch = document?.getString("branch") ?: "CSE",
-                    total = 0
+                    total =77
                 )
             }
             .addOnFailureListener {

@@ -11,27 +11,26 @@ import com.igdtuw.mysync.viewmodel.*
 @Composable
 fun AppNavigation() {
     val navController = rememberNavController()
-
-    // Shared ViewModels
     val dashboardViewModel: DashboardViewModel = viewModel()
     val announcementViewModel: AnnouncementViewModel = viewModel()
     val assignmentViewModel: AssignmentViewModel = viewModel()
 
     NavHost(
         navController = navController,
-        // Match the route name exactly as defined below
         startDestination = "splash"
     ) {
-        // --- AUTH & STARTUP ---
+
         composable("splash") {
-            SplashScreen(navController)
+            SplashScreen(navController, dashboardViewModel)
         }
 
         composable("login") {
             Login(navController, dashboardViewModel)
         }
+        composable("student_cr") {
+            Dash_main_Cr(navController, dashboardViewModel)
+        }
 
-        // --- DASHBOARDS ---
         composable("student") {
             Dash_main(navController, dashboardViewModel)
         }
@@ -40,7 +39,6 @@ fun AppNavigation() {
             Dash_CR(navController, dashboardViewModel)
         }
 
-        // --- STUDENT FEATURES ---
         composable("announcements") {
             Announcement_Student(announcementViewModel)
         }
@@ -54,14 +52,12 @@ fun AppNavigation() {
 
         composable("attendance") {
             val vm: AttendanceViewModel = viewModel()
-            // Pulling student name from dashboard state
             StudentScreen(
                 viewModel = vm,
                 studentName = dashboardViewModel.dashboardData.value.user
             )
         }
 
-        // --- CR FEATURES ---
         composable("cr_announcements") {
             Announcement_CR(announcementViewModel)
         }

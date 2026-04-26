@@ -11,23 +11,6 @@ class TimetableViewModel : ViewModel() {
         "CseAi-1", "CseAi-2", "CseAi-3"
     )
 
-//    private val pdfUrlcse1 =
-//        "https://drive.google.com/uc?export=download&id=1L6q1x0ofQdHqZLgCiQspe-aaWCdvfmFE"
-//
-//    private val pdfUrlcse2 =
-//        "https://drive.google.com/uc?export=download&id=1mW5OazbrSSIaA9GoBSUVBiRLET-kHxul"
-//
-//    private val pdfUrlcse3 =
-//        "https://drive.google.com/uc?export=download&id=1c-3czR3gNP_5QS9ngrGEp1Y_4RKbdPGR"
-//
-//    private val pdfUrlcseAi1 =
-//        "https://drive.google.com/uc?export=download&id=1klVUUwIJ8Hn-XahF7Y3sIhfAGQItzF91"
-//
-//    private val pdfUrlcseAi2 =
-//        "https://drive.google.com/uc?export=download&id=1Us97DWoKFczSdbNGrvB6NVjvhn2L4szu"
-//
-//    private val pdfUrlcseAi3 =
-//        "https://drive.google.com/uc?export=download&id=1jV9LcI7MJeeiAHzNLsM662EjP1mUQw8k"
     private val timetableList = listOf(
         TimetableData("Cse-1", "https://drive.google.com/file/d/1L6q1x0ofQdHqZLgCiQspe-aaWCdvfmFE/view?usp=drive_link", 1),
         TimetableData("Cse-2", "https://drive.google.com/file/d/1mW5OazbrSSIaA9GoBSUVBiRLET-kHxul/view?usp=drive_link", 1),

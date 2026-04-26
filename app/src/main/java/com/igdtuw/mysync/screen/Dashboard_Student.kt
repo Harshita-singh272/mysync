@@ -70,12 +70,12 @@ fun Dash_main(navController: NavController, dashboardViewModel: DashboardViewMod
                 ) {
                     Row(
                         verticalAlignment = Alignment.CenterVertically,
-                        modifier = Modifier.padding(top = 15.dp)
+                        modifier = Modifier.padding(top = 35.dp)
                     ) {
                         Icon(
                             painter = painterResource(id = R.drawable.dashicon),
                             contentDescription = null,
-                            modifier = Modifier.size(size = 56.dp),
+                            modifier = Modifier.size(size = 66.dp),
                             tint = colorResource(id = R.color.olive)
                         )
                         Text(
@@ -83,7 +83,7 @@ fun Dash_main(navController: NavController, dashboardViewModel: DashboardViewMod
                             fontWeight = FontWeight.Bold,
                             fontFamily = FontFamily(Font(R.font.nunito_bold)),
                             color = colorResource(id = R.color.dark_grey),
-                            fontSize = 29.sp
+                            fontSize = 35.sp
                         )
                         Row(
                             modifier = Modifier
@@ -381,9 +381,9 @@ fun Dash_main(navController: NavController, dashboardViewModel: DashboardViewMod
             ) {
                 Box(
                     modifier = Modifier
-                        .padding(top = 60.dp, end = 10.dp) // Offset from the very corner
-                        .fillMaxWidth(0.70f) // Takes 70% of screen width
-                        .wrapContentHeight() // Only as tall as its content
+                        .padding(top = 60.dp, end = 10.dp)
+                        .fillMaxWidth(0.70f)
+                        .wrapContentHeight()
                         .border(
                             3.dp,
                             color = colorResource(id = R.color.sage_green),
@@ -394,7 +394,7 @@ fun Dash_main(navController: NavController, dashboardViewModel: DashboardViewMod
                             color = colorResource(id = R.color.button)
                         )
                         .padding(15.dp)
-                        .clickable(enabled = false) { } // Prevents closing when clicking inside the card
+                        .clickable(enabled = false) { }
                 )
                 {
                     Column(horizontalAlignment = Alignment.CenterHorizontally) {

@@ -36,7 +36,6 @@ fun Login(navController: NavController, dashboardViewModel: DashboardViewModel) 
                 )
             )
     ) {
-        // Main Content Area
         Column(
             modifier = Modifier
                 .fillMaxSize()
@@ -44,7 +43,6 @@ fun Login(navController: NavController, dashboardViewModel: DashboardViewModel) 
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.Center
         ) {
-            // Main Branding
             Text(
                 text = "My ClassSync",
                 fontSize = 44.sp,
@@ -62,7 +60,6 @@ fun Login(navController: NavController, dashboardViewModel: DashboardViewModel) 
 
             Spacer(modifier = Modifier.height(60.dp))
 
-            // Professional Login Card
             Surface(
                 shape = RoundedCornerShape(28.dp),
                 shadowElevation = 12.dp,
@@ -143,11 +140,9 @@ fun Login(navController: NavController, dashboardViewModel: DashboardViewModel) 
                 }
             }
 
-            // This spacer keeps the card centered while allowing the footer to be at the bottom
             Spacer(modifier = Modifier.height(100.dp))
         }
 
-        // --- COOL SUBTITLE AT BOTTOM ---
         Column(
             modifier = Modifier
                 .align(Alignment.BottomCenter)

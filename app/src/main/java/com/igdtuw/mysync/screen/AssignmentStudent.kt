@@ -15,7 +15,7 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.InsertLink // Alternative for Link
+import androidx.compose.material.icons.filled.InsertLink
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -43,7 +43,6 @@ fun AssignmentScreen(
             .fillMaxSize()
             .background(cream)
     ) {
-        // --- HEADER SECTION ---
         item {
             Column(
                 modifier = Modifier
@@ -153,7 +152,6 @@ fun StudentAssignmentItem(item: AssignmentItem, context: Context) {
                         val intent = Intent(Intent.ACTION_VIEW, Uri.parse(item.link))
                         context.startActivity(intent)
                     } catch (e: Exception) {
-                        // Optional: Handle broken links here
                     }
                 }
             },
@@ -171,7 +169,7 @@ fun StudentAssignmentItem(item: AssignmentItem, context: Context) {
                 contentAlignment = Alignment.Center
             ) {
                 Icon(
-                    imageVector = Icons.Default.InsertLink, // Fixed icon reference
+                    imageVector = Icons.Default.InsertLink,
                     contentDescription = null,
                     tint = Color.White,
                     modifier = Modifier.size(20.dp)

@@ -39,7 +39,6 @@ fun Attendance_CR(viewModel: AttendanceViewModel = viewModel()) {
     var showAddSubjectDialog by remember { mutableStateOf(false) }
     var newSubjectName by remember { mutableStateOf("") }
 
-    // Auto-generate today's date
     val currentDate = SimpleDateFormat("dd-MM-yyyy", Locale.getDefault()).format(Date())
 
     val filteredStudents = viewModel.studentList.filter {
@@ -122,7 +121,6 @@ fun Attendance_CR(viewModel: AttendanceViewModel = viewModel()) {
                             Toast.makeText(context, "Attendance uploaded for $selectedSubject", Toast.LENGTH_SHORT).show()
                         }
                     },
-                    // Changed: Removed the requirement for at least one present student to allow "All Absent" saves
                     enabled = selectedSubject != "Select Subject",
                     modifier = Modifier
                         .padding(20.dp)
@@ -159,7 +157,7 @@ fun Attendance_CR(viewModel: AttendanceViewModel = viewModel()) {
                         ) {
                             viewModel.subjects.forEach { subjectName ->
                                 DropdownMenuItem(
-                                    text = { Text(text = subjectName) }, // No more .name needed
+                                    text = { Text(text = subjectName) },
                                     onClick = {
                                         selectedSubject = subjectName
                                         expanded = false

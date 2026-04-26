@@ -4,7 +4,6 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.MoreVert
 import androidx.compose.material3.*
@@ -28,7 +27,6 @@ fun Announcement_CR(viewModel: AnnouncementViewModel) {
     var selectedAnnouncement by remember { mutableStateOf<Announcement?>(null) }
     var showEditDialog by remember { mutableStateOf(false) }
 
-    // Edit Dialog
     if (showEditDialog && selectedAnnouncement != null) {
         var editTitle by remember { mutableStateOf(selectedAnnouncement!!.title) }
         var editDesc by remember { mutableStateOf(selectedAnnouncement!!.description) }
@@ -54,7 +52,6 @@ fun Announcement_CR(viewModel: AnnouncementViewModel) {
     }
 
     Column(modifier = Modifier.fillMaxSize().background(colorResource(id = R.color.cream))) {
-        // Top Header
         Box(
             modifier = Modifier.fillMaxWidth().background(colorResource(id = R.color.sage_green)).padding(vertical = 20.dp),
             contentAlignment = Alignment.Center
@@ -63,7 +60,6 @@ fun Announcement_CR(viewModel: AnnouncementViewModel) {
         }
 
         LazyColumn(contentPadding = PaddingValues(16.dp), verticalArrangement = Arrangement.spacedBy(12.dp)) {
-            // Post Section
             item {
                 Card(modifier = Modifier.fillMaxWidth(), colors = CardDefaults.cardColors(containerColor = Color.White)) {
                     Column(modifier = Modifier.padding(16.dp)) {
@@ -79,8 +75,6 @@ fun Announcement_CR(viewModel: AnnouncementViewModel) {
                     }
                 }
             }
-
-            // Management List
             items(announcements) { item ->
                 var menuExpanded by remember { mutableStateOf(false) }
                 Card(modifier = Modifier.fillMaxWidth(), colors = CardDefaults.cardColors(containerColor = Color.White)) {

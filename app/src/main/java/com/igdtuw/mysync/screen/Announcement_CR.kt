@@ -37,9 +37,15 @@ fun Announcement_CR(viewModel: AnnouncementViewModel) {
             title = { Text("Edit Post") },
             text = {
                 Column {
-                    OutlinedTextField(value = editTitle, onValueChange = { editTitle = it }, label = { Text("Title") })
+                    OutlinedTextField(
+                        value = editTitle,
+                        onValueChange = { editTitle = it },
+                        label = { Text("Title") })
                     Spacer(Modifier.height(8.dp))
-                    OutlinedTextField(value = editDesc, onValueChange = { editDesc = it }, label = { Text("Description") })
+                    OutlinedTextField(
+                        value = editDesc,
+                        onValueChange = { editDesc = it },
+                        label = { Text("Description") })
                 }
             },
             confirmButton = {
@@ -52,53 +58,102 @@ fun Announcement_CR(viewModel: AnnouncementViewModel) {
         )
     }
 
-    Column(modifier = Modifier
-        .fillMaxSize()
-        .background(cream)) {
+    Column(
+        modifier = Modifier
+            .fillMaxSize()
+            .background(Color(0xFFF7F9F2)).padding(bottom= 20.dp)
+    ) {
         Box(
-            modifier = Modifier
-                .fillMaxWidth()
-                .background(colorResource(id = R.color.sage_green))
-                .padding(start = 20.dp, top = 38.dp, bottom = 15.dp),
-            contentAlignment = Alignment.Center
+            modifier = Modifier.fillMaxWidth()
+                .background(
+                    color = Color(0xFFA3B18A)
+                ),
         ) {
-            Text(
-                "CR Announcement Board",
-                fontWeight = FontWeight.Black,
-                color =colorResource(id= R.color.dark_olive),
-                fontSize = 20.sp
-            )
+            Column(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(start = 10.dp, top = 35.dp, bottom = 10.dp)
+            ) {
+                Text(
+                    "CR Announcement Board",
+                    fontWeight = FontWeight.Black,
+                    fontSize = 28.sp,
+                    modifier= Modifier.align(Alignment.CenterHorizontally),
+                    color = colorResource(id = R.color.dark_olive)
+                )
+            }
         }
-
-        LazyColumn(contentPadding = PaddingValues(16.dp), verticalArrangement = Arrangement.spacedBy(12.dp)) {
+        HorizontalDivider(thickness = 1.dp, color = colorResource(id = R.color.border))
+        LazyColumn(
+            contentPadding = PaddingValues(16.dp),
+            verticalArrangement = Arrangement.spacedBy(12.dp)
+        ) {
             item {
-                Card(modifier = Modifier.fillMaxWidth(), colors = CardDefaults.cardColors(containerColor = Color.White)) {
+                Card(
+                    modifier = Modifier.fillMaxWidth(),
+                    colors = CardDefaults.cardColors(containerColor = Color.White)
+                ) {
                     Column(modifier = Modifier.padding(16.dp)) {
-                        OutlinedTextField(value = title, onValueChange = { title = it }, label = { Text("Topic") }, modifier = Modifier.fillMaxWidth())
+                        OutlinedTextField(
+                            value = title,
+                            onValueChange = { title = it },
+                            label = { Text("Topic") },
+                            modifier = Modifier.fillMaxWidth()
+                        )
                         Spacer(Modifier.height(8.dp))
-                        OutlinedTextField(value = description, onValueChange = { description = it }, label = { Text("Details") }, modifier = Modifier.fillMaxWidth())
+                        OutlinedTextField(
+                            value = description,
+                            onValueChange = { description = it },
+                            label = { Text("Details") },
+                            modifier = Modifier.fillMaxWidth()
+                        )
                         Spacer(Modifier.height(12.dp))
                         Button(
-                            onClick = { viewModel.addAnnouncement(title, description, "General"); title = ""; description = "" },
+                            onClick = {
+                                viewModel.addAnnouncement(
+                                    title,
+                                    description,
+                                    "General"
+                                ); title = ""; description = ""
+                            },
                             modifier = Modifier.fillMaxWidth(),
-                            colors = ButtonDefaults.buttonColors(containerColor = colorResource(id = R.color.sage_green))
+                            colors = ButtonDefaults.buttonColors(containerColor = colorResource(id = R.color.olive))
                         ) { Text("Post to Students") }
                     }
                 }
             }
             items(announcements) { item ->
                 var menuExpanded by remember { mutableStateOf(false) }
-                Card(modifier = Modifier.fillMaxWidth(), colors = CardDefaults.cardColors(containerColor = Color.White)) {
-                    Row(modifier = Modifier.padding(16.dp), verticalAlignment = Alignment.CenterVertically) {
+                Card(
+                    modifier = Modifier.fillMaxWidth(),
+                    colors = CardDefaults.cardColors(containerColor = Color.White)
+                ) {
+                    Row(
+                        modifier = Modifier.padding(16.dp),
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
                         Column(modifier = Modifier.weight(1f)) {
                             Text(item.title, fontWeight = FontWeight.Bold)
                             Text(item.description, fontSize = 12.sp, color = Color.Gray)
                         }
                         Box {
-                            IconButton(onClick = { menuExpanded = true }) { Icon(Icons.Default.MoreVert, null) }
-                            DropdownMenu(expanded = menuExpanded, onDismissRequest = { menuExpanded = false }) {
-                                DropdownMenuItem(text = { Text("Edit") }, onClick = { selectedAnnouncement = item; showEditDialog = true; menuExpanded = false })
-                                DropdownMenuItem(text = { Text("Delete", color = Color.Red) }, onClick = { viewModel.deleteAnnouncement(item.id); menuExpanded = false })
+                            IconButton(onClick = {
+                                menuExpanded = true
+                            }) { Icon(Icons.Default.MoreVert, null) }
+                            DropdownMenu(
+                                expanded = menuExpanded,
+                                onDismissRequest = { menuExpanded = false }) {
+                                DropdownMenuItem(
+                                    text = { Text("Edit") },
+                                    onClick = {
+                                        selectedAnnouncement = item; showEditDialog =
+                                        true; menuExpanded = false
+                                    })
+                                DropdownMenuItem(
+                                    text = { Text("Delete", color = Color.Red) },
+                                    onClick = {
+                                        viewModel.deleteAnnouncement(item.id); menuExpanded = false
+                                    })
                             }
                         }
                     }

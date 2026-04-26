@@ -60,30 +60,30 @@ fun AssignmentCRScreen(
                 text = { Text("New Post") }
             )
         },
-        containerColor = cream
+        containerColor =(Color(0xFFF7F9F2))
     ) { paddingValues ->
 
         LazyColumn(
             modifier = Modifier
-                .padding(paddingValues)
                 .fillMaxSize()
         ) {
             item {
                 Box(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .background(Color(0xFFA3B18A))
-                        .padding(start = 20.dp, top = 15.dp, bottom = 15.dp),
-                    contentAlignment = Alignment.Center
+                    modifier = Modifier.fillMaxWidth()
+                        .background(
+                            color = Color(0xFFA3B18A)
+                        ),
                 ) {
                     Column(
-                        horizontalAlignment = Alignment.CenterHorizontally
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(start = 10.dp, top = 35.dp, bottom = 10.dp)
                     ) {
                         Text(
                             text = "Assignments",
                             fontWeight = FontWeight.Black,
-                            fontSize = 20.sp,
-                            color = Color(0xFF344E41)
+                            fontSize = 32.sp,
+                            color = colorResource(id = R.color.dark_olive)
                         )
 
                         Spacer(modifier = Modifier.height(6.dp))
@@ -91,10 +91,11 @@ fun AssignmentCRScreen(
                         Text(
                             text = "Track your CSE '29 submissions",
                             fontSize = 14.sp,
-                            color = Color(0xFF344E41).copy(alpha = 0.8f)
+                            color = colorResource(id = R.color.dark_grey)
                         )
                     }
                 }
+                HorizontalDivider(thickness = 1.dp, color = colorResource(id = R.color.border))
             }
 
 

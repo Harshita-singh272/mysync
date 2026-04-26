@@ -72,18 +72,41 @@ fun Attendance_CR(viewModel: AttendanceViewModel = viewModel()) {
     Scaffold(
         topBar = {
             Surface(shadowElevation = 6.dp, color = colorResource(id = R.color.olive), modifier = Modifier.fillMaxWidth()) {
-                Column(modifier = Modifier.padding(start = 10.dp, end = 10.dp, top = 38.dp, bottom = 15.dp)) {
-                    Text("Attendance Management", color = Color.White, fontSize = 22.sp, fontWeight = FontWeight.Bold)
-                    Spacer(modifier = Modifier.height(12.dp))
-                    OutlinedTextField(
-                        value = searchQuery, onValueChange = { searchQuery = it },
-                        placeholder = { Text("Search by student name...", color = Color.Gray) },
-                        modifier = Modifier.fillMaxWidth().background(Color.White, RoundedCornerShape(12.dp)),
-                        leadingIcon = { Icon(Icons.Default.Search, null, tint = Color.Gray) },
-                        shape = RoundedCornerShape(12.dp),
-                        colors = OutlinedTextFieldDefaults.colors(focusedContainerColor = Color.White, unfocusedContainerColor = Color.White)
-                    )
+//
+                Box(
+                    modifier = Modifier.fillMaxWidth()
+                        .background(
+                            color = Color(0xFFA3B18A)
+                        ),
+                ) {
+                    Column(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(start = 10.dp, top = 35.dp, bottom = 10.dp, end=10.dp)
+                    ) {
+                        Text(
+                            "Manage Attendance",
+                            fontWeight = FontWeight.Black,
+                            fontSize = 32.sp,
+//                            modifier= Modifier.align(Alignment.CenterHorizontally),
+                            color = colorResource(id = R.color.dark_olive)
+                        )
+                        Spacer(modifier = Modifier.height(12.dp))
+                        OutlinedTextField(
+                            value = searchQuery, onValueChange = { searchQuery = it },
+                            placeholder = { Text("Search by student name...", color = Color.Gray) },
+                            modifier = Modifier.fillMaxWidth()
+                                .background(Color.White, RoundedCornerShape(12.dp)),
+                            leadingIcon = { Icon(Icons.Default.Search, null, tint = Color.Gray) },
+                            shape = RoundedCornerShape(12.dp),
+                            colors = OutlinedTextFieldDefaults.colors(
+                                focusedContainerColor = Color.White,
+                                unfocusedContainerColor = Color.White
+                            )
+                        )
+                    }
                 }
+                HorizontalDivider(thickness = 1.dp, color = colorResource(id = R.color.border))
             }
         },
         bottomBar = {
@@ -95,6 +118,7 @@ fun Attendance_CR(viewModel: AttendanceViewModel = viewModel()) {
                             Toast.makeText(context, "Attendance uploaded!", Toast.LENGTH_SHORT).show()
                         }
                     },
+                    elevation = ButtonDefaults.buttonElevation(10.dp) ,
                     enabled = selectedSubject != "Select Subject",
                     modifier = Modifier.padding(20.dp).fillMaxWidth().height(56.dp),
                     shape = RoundedCornerShape(16.dp),

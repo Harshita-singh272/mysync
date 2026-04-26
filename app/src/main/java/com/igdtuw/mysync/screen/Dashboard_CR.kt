@@ -18,6 +18,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.wrapContentHeight
+import androidx.compose.foundation.layout.wrapContentWidth
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
@@ -54,7 +55,8 @@ fun Dash_CR(navController: NavController,dashboardViewModel: DashboardViewModel)
     }
     val context = LocalContext.current
 
-    Box(modifier = Modifier.fillMaxSize()) {
+    Box(modifier = Modifier.fillMaxSize()
+        .padding(bottom = 7.dp)) {
         LazyColumn(
             modifier = Modifier
                 .fillMaxSize()
@@ -69,12 +71,12 @@ fun Dash_CR(navController: NavController,dashboardViewModel: DashboardViewModel)
                 ) {
                     Row(
                         verticalAlignment = Alignment.CenterVertically,
-                        modifier = Modifier.padding(top = 15.dp)
+                        modifier = Modifier.padding(top = 35.dp)
                     ) {
                         Icon(
                             painter = painterResource(id = R.drawable.dashicon),
                             contentDescription = null,
-                            modifier = Modifier.size(size = 56.dp),
+                            modifier = Modifier.size(size = 66.dp),
                             tint = colorResource(id = R.color.olive)
                         )
                         Text(
@@ -82,7 +84,7 @@ fun Dash_CR(navController: NavController,dashboardViewModel: DashboardViewModel)
                             fontWeight = FontWeight.Bold,
                             fontFamily = FontFamily(Font(R.font.nunito_bold)),
                             color = colorResource(id = R.color.dark_grey),
-                            fontSize = 29.sp
+                            fontSize = 35.sp
                         )
                         Row(
                             modifier = Modifier
@@ -94,8 +96,7 @@ fun Dash_CR(navController: NavController,dashboardViewModel: DashboardViewModel)
                                 Icon(
                                     painter = painterResource(id = R.drawable.profile),
                                     contentDescription = "Profile",
-                                    modifier = Modifier
-                                        .fillMaxWidth()
+                                    modifier = Modifier.fillMaxWidth()
                                         .size(size = 80.dp),
                                     tint = colorResource(id = R.color.olive)
                                 )
@@ -128,9 +129,13 @@ fun Dash_CR(navController: NavController,dashboardViewModel: DashboardViewModel)
                             fontSize = 17.sp
                         )
                     }
-                    IconButton(onClick = {navController.navigate("student_cr") {
-                        popUpTo("cr") { inclusive = true }
-                    }}) {
+                    IconButton(onClick = {
+                        Toast.makeText(context, "Switch clicked", Toast.LENGTH_SHORT).show()
+
+                        navController.navigate("student_cr") {
+                            popUpTo("cr") { inclusive = true }
+                        }
+                    }){
                         Icon(
                             painter = painterResource(id = R.drawable.on),
                             contentDescription = "Switch",
@@ -142,12 +147,13 @@ fun Dash_CR(navController: NavController,dashboardViewModel: DashboardViewModel)
                 Spacer(modifier = Modifier.height(16.dp))
                 Button(
                     onClick = {
-                        navController.navigate("cr_assignment")
+                        navController.navigate("assignmentstudent_cr")
                     },
                     elevation = ButtonDefaults.buttonElevation(defaultElevation = 5.dp),
                     shape = RoundedCornerShape(15.dp),
                     modifier = Modifier
-                        .fillMaxWidth(0.97f)
+                        .fillMaxWidth()
+                        .wrapContentWidth(Alignment.CenterHorizontally)
                         .wrapContentHeight()
                         .padding(5.dp),
                     colors = ButtonDefaults.buttonColors(containerColor = colorResource(id = R.color.off_white))
@@ -215,7 +221,8 @@ fun Dash_CR(navController: NavController,dashboardViewModel: DashboardViewModel)
                     elevation = ButtonDefaults.buttonElevation(defaultElevation = 5.dp),
                     shape = RoundedCornerShape(15.dp),
                     modifier = Modifier
-                        .fillMaxWidth(0.97f)
+                        .fillMaxWidth()
+                        .wrapContentWidth(Alignment.CenterHorizontally)
                         .wrapContentHeight()
                         .padding(
                             top = 5.dp,
@@ -255,7 +262,7 @@ fun Dash_CR(navController: NavController,dashboardViewModel: DashboardViewModel)
                                         painter = painterResource(id = R.drawable.speaker),
                                         contentDescription = null,
                                         tint = colorResource(id = R.color.olive),
-                                        modifier = Modifier.size(size = 45.dp)
+                                        modifier = Modifier.size(size = 47.dp)
                                     )
                                 }
                             }
@@ -270,15 +277,17 @@ fun Dash_CR(navController: NavController,dashboardViewModel: DashboardViewModel)
                                     color = colorResource(id = R.color.grey),
                                     fontSize = 18.sp,
                                     fontFamily = FontFamily(Font(R.font.nunito_semibold)),
-                                    fontWeight = FontWeight.SemiBold
+                                    fontWeight = FontWeight.SemiBold,
+                                    modifier = Modifier.align(Alignment.CenterVertically)
                                 )
                                 Spacer(modifier = Modifier.width(8.dp))
                                 Text(
-                                    text = data.branch,
+                                    text = "${data.branch}",
                                     color = colorResource(id = R.color.grey),
                                     fontSize = 15.sp,
                                     fontFamily = FontFamily(Font(R.font.nunito_light)),
-                                    fontWeight = FontWeight.Bold
+                                    fontWeight = FontWeight.Bold,
+                                    modifier = Modifier.align(Alignment.CenterVertically)
                                 )
                             }
                         }
@@ -291,7 +300,8 @@ fun Dash_CR(navController: NavController,dashboardViewModel: DashboardViewModel)
                                     color = colorResource(id = R.color.grey),
                                     fontSize = 18.sp,
                                     fontFamily = FontFamily(Font(R.font.nunito_semibold)),
-                                    fontWeight = FontWeight.SemiBold
+                                    fontWeight = FontWeight.SemiBold,
+                                    modifier = Modifier.align(Alignment.CenterVertically)
                                 )
                                 Spacer(modifier = Modifier.width(5.dp))
                                 Text(
@@ -299,7 +309,8 @@ fun Dash_CR(navController: NavController,dashboardViewModel: DashboardViewModel)
                                     color = colorResource(id = R.color.grey),
                                     fontSize = 15.sp,
                                     fontFamily = FontFamily(Font(R.font.nunito_light)),
-                                    fontWeight = FontWeight.Bold
+                                    fontWeight = FontWeight.Bold,
+                                    modifier = Modifier.align(Alignment.CenterVertically)
                                 )
                             }
                         }
@@ -324,7 +335,8 @@ fun Dash_CR(navController: NavController,dashboardViewModel: DashboardViewModel)
                     elevation = ButtonDefaults.buttonElevation(defaultElevation = 5.dp),
                     shape = RoundedCornerShape(15.dp),
                     modifier = Modifier
-                        .fillMaxWidth(0.97f)
+                        .fillMaxWidth()
+                        .wrapContentWidth(Alignment.CenterHorizontally)
                         .wrapContentHeight()
                         .padding(5.dp),
                     colors = ButtonDefaults.buttonColors(containerColor = colorResource(id = R.color.off_white))
@@ -430,9 +442,9 @@ fun Dash_CR(navController: NavController,dashboardViewModel: DashboardViewModel)
             ) {
                 Box(
                     modifier = Modifier
-                        .padding(top = 60.dp, end = 10.dp) // Offset from the very corner
-                        .fillMaxWidth(0.70f) // Takes 70% of screen width
-                        .wrapContentHeight() // Only as tall as its content
+                        .padding(top = 60.dp, end = 10.dp)
+                        .fillMaxWidth(0.70f)
+                        .wrapContentHeight()
                         .border(
                             3.dp,
                             color = colorResource(id = R.color.sage_green),
@@ -443,7 +455,7 @@ fun Dash_CR(navController: NavController,dashboardViewModel: DashboardViewModel)
                             color = colorResource(id = R.color.button)
                         )
                         .padding(15.dp)
-                        .clickable(enabled = false) { } // Prevents closing when clicking inside the card
+                        .clickable(enabled = false) { }
                 )
                 {
                     Column(horizontalAlignment = Alignment.CenterHorizontally) {

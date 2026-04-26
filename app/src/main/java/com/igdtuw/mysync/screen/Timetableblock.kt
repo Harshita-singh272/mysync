@@ -1,5 +1,6 @@
 package com.igdtuw.mysync.screen
 
+import android.content.Intent
 import android.widget.Toast
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -14,6 +15,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.wrapContentHeight
+import androidx.compose.foundation.layout.wrapContentWidth
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowDropDown
@@ -42,6 +44,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
+import com.igdtuw.mysync.PdfActivity
 import com.igdtuw.mysync.R
 import com.igdtuw.mysync.viewmodel.TimetableViewModel
 
@@ -57,7 +60,8 @@ fun Timetableblock() {
         )
     ) {
         Box(
-            modifier = Modifier.fillMaxWidth(0.97f)
+            modifier = Modifier.fillMaxWidth()
+                .wrapContentWidth(Alignment.CenterHorizontally)
                 .wrapContentHeight()
                 .shadow(
                     elevation = 6.dp,
@@ -113,9 +117,19 @@ fun Timetableblock() {
                             val branch = viewModel.selectedBranch.value
 
                             if (branch == "Choose your branch") {
-                                Toast.makeText(context, "Choose a branch", Toast.LENGTH_SHORT).show()
+                                Toast.makeText(context, "Choose a branch", Toast.LENGTH_SHORT)
+                                    .show()
                             } else {
-                                Toast.makeText(context, "Opening $branch timetable", Toast.LENGTH_SHORT).show()
+                                viewModel.loadTimetable()
+
+                                val url = viewModel.selectedPdfUrl.value
+
+                                val intent = android.content.Intent(
+                                    android.content.Intent.ACTION_VIEW,
+                                    android.net.Uri.parse(url)
+                                )
+
+                                context.startActivity(intent)
                             }
                         },
                         colors = ButtonDefaults.buttonColors(colorResource(id = R.color.olive))
@@ -126,53 +140,7 @@ fun Timetableblock() {
             }
         }
     }
-    }
-//@Composable
-//fun Timetabledrop(){
-//    var expanded by remember {
-//        mutableStateOf(false)
-//    }
-//    var branch by remember {
-//        mutableStateOf("Choose your branch")
-//    }
-//    Box(
-//        modifier = Modifier.padding(
-//            top=10.dp,
-//            bottom =10.dp,
-//            start= 10.dp,
-//            )
-//            .fillMaxWidth()
-//            .border(2.dp, color = colorResource(id =R.color.sage_green) , shape = RoundedCornerShape(15.dp))
-//    ){
-//        Text(
-//            text = branch,
-//            modifier = Modifier.align(Alignment.Center),
-//            fontSize = 16.sp,
-//            color = colorResource(id= R.color.dark_grey)
-//        )
-//        IconButton(onClick = {expanded = !expanded }) {
-//            Icon(
-//                Icons.Default.ArrowDropDown,
-//                contentDescription = "Subjects",
-//                modifier = Modifier
-////                .fillMaxWidth(),
-//                    .padding(10.dp),
-//                tint = colorResource(id = R.color.sage_green)
-//            )
-//        }
-//        DropdownMenu(
-//            expanded = expanded,
-//            onDismissRequest = { expanded = false }
-//        ) {
-//            listOf("   Cse-1   ", "   Cse-2   ", "   Cse-3   ", "   CseAi-1   ", "   CseAi-2   ", "   CseAi-3   ").forEach {b->
-//                DropdownMenuItem(text = { Text(text = b) }, onClick = {
-//                    branch = b
-//                    expanded = false
-//                })
-//            }
-//        }
-//    }
-//}
+}
     @Composable
     fun Timetabledrop(viewModel: TimetableViewModel) {
 

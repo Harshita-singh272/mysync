@@ -17,6 +17,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.wrapContentHeight
+import androidx.compose.foundation.layout.wrapContentWidth
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowDropDown
@@ -55,7 +56,8 @@ fun Syllabusblock() {
     Column(modifier = Modifier.padding(start = 5.dp,
         end= 5.dp)) {
         Box(
-            modifier = Modifier.fillMaxWidth(0.97f)
+            modifier = Modifier .fillMaxWidth()
+                .wrapContentWidth(Alignment.CenterHorizontally)
                 .wrapContentHeight()
                 .shadow(
                     elevation = 6.dp,
@@ -114,8 +116,16 @@ fun Syllabusblock() {
                         if (subject == "Please choose your subject") {
                             Toast.makeText(context, "Please select a subject", Toast.LENGTH_SHORT).show()
                         } else {
-                            // 👉 Here you navigate or fetch syllabus
-                            Toast.makeText(context, "Opening $subject", Toast.LENGTH_SHORT).show()
+                            viewModel.loadSyllabus()
+
+                            val url = viewModel.selectedPdfUrl.value
+
+                            val intent = android.content.Intent(
+                                android.content.Intent.ACTION_VIEW,
+                                android.net.Uri.parse(url)
+                            )
+
+                            context.startActivity(intent)
                         }
                     },
                     colors = ButtonDefaults.buttonColors(colorResource(id = R.color.olive))

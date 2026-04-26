@@ -1,121 +1,98 @@
 package com.igdtuw.mysync.screen
-import androidx.lifecycle.viewmodel.compose.viewModel
-import com.igdtuw.mysync.viewmodel.AnnouncementViewModel
+
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.MoreVert
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.igdtuw.mysync.R
 import com.igdtuw.mysync.model.Announcement
-@Composable
-fun PostAnnouncementScreen(viewModel: AnnouncementViewModel) {
+import com.igdtuw.mysync.viewmodel.AnnouncementViewModel
 
+@Composable
+fun Announcement_CR(viewModel: AnnouncementViewModel) {
     var title by remember { mutableStateOf("") }
     var description by remember { mutableStateOf("") }
+    val announcements = viewModel.announcements
+    var selectedAnnouncement by remember { mutableStateOf<Announcement?>(null) }
+    var showEditDialog by remember { mutableStateOf(false) }
 
-    Column(
-        modifier = Modifier
-            .fillMaxSize()
-            .background(colorResource(id = R.color.cream))
-    ) {
+    if (showEditDialog && selectedAnnouncement != null) {
+        var editTitle by remember { mutableStateOf(selectedAnnouncement!!.title) }
+        var editDesc by remember { mutableStateOf(selectedAnnouncement!!.description) }
+
+        AlertDialog(
+            onDismissRequest = { showEditDialog = false },
+            title = { Text("Edit Post") },
+            text = {
+                Column {
+                    OutlinedTextField(value = editTitle, onValueChange = { editTitle = it }, label = { Text("Title") })
+                    Spacer(Modifier.height(8.dp))
+                    OutlinedTextField(value = editDesc, onValueChange = { editDesc = it }, label = { Text("Description") })
+                }
+            },
+            confirmButton = {
+                Button(onClick = {
+                    viewModel.updateAnnouncement(selectedAnnouncement!!.id, editTitle, editDesc)
+                    showEditDialog = false
+                }) { Text("Save") }
+            },
+            dismissButton = { TextButton(onClick = { showEditDialog = false }) { Text("Cancel") } }
+        )
+    }
+
+    Column(modifier = Modifier.fillMaxSize().background(colorResource(id = R.color.cream))) {
         Box(
-            modifier = Modifier
-                .fillMaxWidth()
-                .background(colorResource(id = R.color.sage_green))
-                .padding(vertical = 20.dp),
+            modifier = Modifier.fillMaxWidth().background(colorResource(id = R.color.sage_green)).padding(vertical = 20.dp),
             contentAlignment = Alignment.Center
         ) {
-            Text(
-                "Create Announcement",
-                fontSize = 22.sp,
-                fontWeight = FontWeight.Bold,
-                color = Color.White
-            )
+            Text("CR Announcement Board", color = Color.White, fontWeight = FontWeight.Bold, fontSize = 20.sp)
         }
 
-        Column(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(horizontal = 32.dp, vertical = 32.dp),
-            horizontalAlignment = Alignment.CenterHorizontally
-        ) {
-
-            OutlinedTextField(
-                value = title,
-                onValueChange = { title = it },
-                placeholder = { Text("Title", color = Color.Black.copy(alpha = 0.5f)) },
-                modifier = Modifier.fillMaxWidth()
-                    .shadow(4.dp, RoundedCornerShape(24.dp))
-                ,
-                shape = RoundedCornerShape(50.dp),
-                colors = OutlinedTextFieldDefaults.colors(
-                    unfocusedBorderColor = Color.Black.copy(alpha = 0.3f),
-                    focusedBorderColor = Color.Black.copy(alpha = 0.6f),
-                    unfocusedContainerColor = Color.White,
-                    focusedContainerColor = Color.White,
-                    unfocusedTextColor = Color.Black,
-                    focusedTextColor = Color.Black
-                ),
-                singleLine = true
-            )
-
-            Spacer(Modifier.height(16.dp))
-
-            OutlinedTextField(
-                value = description,
-                onValueChange = { description = it },
-                placeholder = { Text("Description", color = Color.Black.copy(alpha = 0.5f)) },
-                modifier = Modifier.fillMaxWidth().shadow(4.dp, RoundedCornerShape(24.dp)),
-                shape = RoundedCornerShape(50.dp),
-                colors = OutlinedTextFieldDefaults.colors(
-                    unfocusedBorderColor = Color.Black.copy(alpha = 0.3f),
-                    focusedBorderColor = Color.Black.copy(alpha = 0.6f),
-                    unfocusedContainerColor = Color.White,
-                    focusedContainerColor = Color.White,
-                    unfocusedTextColor = Color.Black,
-                    focusedTextColor = Color.Black
-                ),
-                singleLine = true
-            )
-
-            Spacer(Modifier.height(16.dp))
-
-            Button(
-                onClick = {
-                    if (title.isNotBlank() && description.isNotBlank()) {
-                        viewModel.addAnnouncement(title, description)
-                        title = ""
-                        description = ""
+        LazyColumn(contentPadding = PaddingValues(16.dp), verticalArrangement = Arrangement.spacedBy(12.dp)) {
+            item {
+                Card(modifier = Modifier.fillMaxWidth(), colors = CardDefaults.cardColors(containerColor = Color.White)) {
+                    Column(modifier = Modifier.padding(16.dp)) {
+                        OutlinedTextField(value = title, onValueChange = { title = it }, label = { Text("Topic") }, modifier = Modifier.fillMaxWidth())
+                        Spacer(Modifier.height(8.dp))
+                        OutlinedTextField(value = description, onValueChange = { description = it }, label = { Text("Details") }, modifier = Modifier.fillMaxWidth())
+                        Spacer(Modifier.height(12.dp))
+                        Button(
+                            onClick = { viewModel.addAnnouncement(title, description, "General"); title = ""; description = "" },
+                            modifier = Modifier.fillMaxWidth(),
+                            colors = ButtonDefaults.buttonColors(containerColor = colorResource(id = R.color.sage_green))
+                        ) { Text("Post to Students") }
                     }
-                },
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .height(50.dp).shadow(4.dp, RoundedCornerShape(24.dp)),
-                shape = RoundedCornerShape(50.dp),
-                colors = ButtonDefaults.buttonColors(
-                    containerColor = colorResource(id = R.color.sage_green)
-                )
-            ) {
-                Text(
-                    "Post Announcement",
-                    color = Color.White,
-                    fontWeight = FontWeight.Bold,
-                    fontSize = 15.sp
-                )
+                }
+            }
+            items(announcements) { item ->
+                var menuExpanded by remember { mutableStateOf(false) }
+                Card(modifier = Modifier.fillMaxWidth(), colors = CardDefaults.cardColors(containerColor = Color.White)) {
+                    Row(modifier = Modifier.padding(16.dp), verticalAlignment = Alignment.CenterVertically) {
+                        Column(modifier = Modifier.weight(1f)) {
+                            Text(item.title, fontWeight = FontWeight.Bold)
+                            Text(item.description, fontSize = 12.sp, color = Color.Gray)
+                        }
+                        Box {
+                            IconButton(onClick = { menuExpanded = true }) { Icon(Icons.Default.MoreVert, null) }
+                            DropdownMenu(expanded = menuExpanded, onDismissRequest = { menuExpanded = false }) {
+                                DropdownMenuItem(text = { Text("Edit") }, onClick = { selectedAnnouncement = item; showEditDialog = true; menuExpanded = false })
+                                DropdownMenuItem(text = { Text("Delete", color = Color.Red) }, onClick = { viewModel.deleteAnnouncement(item.id); menuExpanded = false })
+                            }
+                        }
+                    }
+                }
             }
         }
     }
 }
-

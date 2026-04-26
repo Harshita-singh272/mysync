@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "641437759486",
+    "project_id": "mysync-16b9e",
+    "storage_bucket": "mysync-16b9e.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:641437759486:android:97af74e7662af050c7b2af",
+        "android_client_info": {
+          "package_name": "com.igdtuw.mysync"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "641437759486-n5he10q30nr30vf7iic27fc5u02n43si.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.igdtuw.mysync",
+            "certificate_hash": "9aa9b1f00335dd16504ccd3758086a84a1d1f494"
+          }
+        },
+        {
+          "client_id": "641437759486-q5iq3vpkqnv7cbi3bsk6p7k0sc172c71.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCnBwn9czJhbWYRP4dzAAWw625GE-fiJ8Y"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "641437759486-q5iq3vpkqnv7cbi3bsk6p7k0sc172c71.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

@@ -14,7 +14,6 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.colorResource
@@ -27,6 +26,8 @@ import com.igdtuw.mysync.model.AttendanceRecord
 import com.igdtuw.mysync.ui.theme.components.AppCard
 import com.igdtuw.mysync.ui.theme.components.AttendanceToggleButton
 import com.igdtuw.mysync.viewmodel.AttendanceViewModel
+import java.text.SimpleDateFormat
+import java.util.*
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -38,11 +39,13 @@ fun Attendance_CR(viewModel: AttendanceViewModel = viewModel()) {
     var showAddSubjectDialog by remember { mutableStateOf(false) }
     var newSubjectName by remember { mutableStateOf("") }
 
+    // Auto-generate today's date
+    val currentDate = SimpleDateFormat("dd-MM-yyyy", Locale.getDefault()).format(Date())
+
     val filteredStudents = viewModel.studentList.filter {
         it.studentName.contains(searchQuery, ignoreCase = true)
     }
 
-    // --- Styled Dialog to Add New Subject ---
     if (showAddSubjectDialog) {
         AlertDialog(
             onDismissRequest = { showAddSubjectDialog = false },
@@ -115,11 +118,12 @@ fun Attendance_CR(viewModel: AttendanceViewModel = viewModel()) {
                 Button(
                     onClick = {
                         if (selectedSubject != "Select Subject") {
-                            viewModel.uploadAttendance(selectedSubject, "26-04-2026")
+                            viewModel.uploadAttendance(selectedSubject, currentDate)
                             Toast.makeText(context, "Attendance uploaded for $selectedSubject", Toast.LENGTH_SHORT).show()
                         }
                     },
-                    enabled = selectedSubject != "Select Subject" && viewModel.studentList.any { it.isPresent },
+                    // Changed: Removed the requirement for at least one present student to allow "All Absent" saves
+                    enabled = selectedSubject != "Select Subject",
                     modifier = Modifier
                         .padding(20.dp)
                         .fillMaxWidth()
@@ -136,70 +140,44 @@ fun Attendance_CR(viewModel: AttendanceViewModel = viewModel()) {
             modifier = Modifier
                 .padding(padding)
                 .fillMaxSize()
-                .background(Color(0xFFF7F9F2)) // Soft background color
+                .background(Color(0xFFF7F9F2))
         ) {
-            // Subject Picker Card
             Card(
-                modifier = Modifier
-                    .padding(16.dp)
-                    .fillMaxWidth(),
+                modifier = Modifier.padding(16.dp).fillMaxWidth(),
                 colors = CardDefaults.cardColors(containerColor = Color.White),
                 elevation = CardDefaults.cardElevation(2.dp)
             ) {
-                Row(
-                    modifier = Modifier.padding(8.dp),
-                    verticalAlignment = Alignment.CenterVertically
-                ) {
+                Row(modifier = Modifier.padding(8.dp), verticalAlignment = Alignment.CenterVertically) {
                     Box(modifier = Modifier.weight(1f)) {
-                        TextButton(
-                            onClick = { expanded = true },
-                            modifier = Modifier.fillMaxWidth()
-                        ) {
-                            Text(
-                                selectedSubject,
-                                style = MaterialTheme.typography.bodyLarge,
-                                color = Color.DarkGray
-                            )
-                            Icon(Icons.Default.ArrowDropDown, contentDescription = null, tint = Color.Gray)
+                        TextButton(onClick = { expanded = true }, modifier = Modifier.fillMaxWidth()) {
+                            Text(selectedSubject, color = Color.DarkGray)
+                            Icon(Icons.Default.ArrowDropDown, null, tint = Color.Gray)
                         }
-                        DropdownMenu(expanded = expanded, onDismissRequest = { expanded = false }) {
-                            viewModel.subjects.forEach { subject ->
+                        DropdownMenu(
+                            expanded = expanded,
+                            onDismissRequest = { expanded = false }
+                        ) {
+                            viewModel.subjects.forEach { subjectName ->
                                 DropdownMenuItem(
-                                    text = { Text(subject.name) },
+                                    text = { Text(text = subjectName) }, // No more .name needed
                                     onClick = {
-                                        selectedSubject = subject.name
+                                        selectedSubject = subjectName
                                         expanded = false
                                     }
                                 )
                             }
                         }
                     }
-                    Divider(
-                        modifier = Modifier
-                            .height(30.dp)
-                            .width(1.dp)
-                            .padding(horizontal = 4.dp),
-                        color = Color.LightGray
-                    )
+                    Divider(modifier = Modifier.height(30.dp).width(1.dp).padding(horizontal = 4.dp), color = Color.LightGray)
                     IconButton(onClick = { showAddSubjectDialog = true }) {
-                        Icon(Icons.Default.Add, contentDescription = "Add Subject", tint = colorResource(id = R.color.olive))
+                        Icon(Icons.Default.Add, null, tint = colorResource(id = R.color.olive))
                     }
                 }
             }
 
-            // Quick Actions
-            Row(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(horizontal = 16.dp),
-                horizontalArrangement = Arrangement.SpaceBetween
-            ) {
-                TextButton(onClick = { viewModel.markAllPresent(true) }) {
-                    Text("Mark All Present", fontWeight = FontWeight.SemiBold)
-                }
-                TextButton(onClick = { viewModel.markAllPresent(false) }) {
-                    Text("Clear All", color = Color.Gray)
-                }
+            Row(modifier = Modifier.fillMaxWidth().padding(horizontal = 16.dp), horizontalArrangement = Arrangement.SpaceBetween) {
+                TextButton(onClick = { viewModel.markAllPresent(true) }) { Text("Mark All Present", fontWeight = FontWeight.SemiBold) }
+                TextButton(onClick = { viewModel.markAllPresent(false) }) { Text("Clear All", color = Color.Gray) }
             }
 
             if (filteredStudents.isEmpty()) {
@@ -207,14 +185,10 @@ fun Attendance_CR(viewModel: AttendanceViewModel = viewModel()) {
                     Text("No students found.", color = Color.LightGray)
                 }
             } else {
-                LazyColumn(
-                    modifier = Modifier.fillMaxSize(),
-                    verticalArrangement = Arrangement.spacedBy(10.dp),
-                    contentPadding = PaddingValues(16.dp)
-                ) {
+                LazyColumn(modifier = Modifier.fillMaxSize(), verticalArrangement = Arrangement.spacedBy(10.dp), contentPadding = PaddingValues(16.dp)) {
                     itemsIndexed(filteredStudents) { _, student ->
                         AttendanceCard(student) { isChecked ->
-                            val originalIndex = viewModel.studentList.indexOf(student)
+                            val originalIndex = viewModel.studentList.indexOfFirst { it.email == student.email }
                             if (originalIndex != -1) {
                                 viewModel.studentList[originalIndex] = student.copy(isPresent = isChecked)
                             }
@@ -229,31 +203,23 @@ fun Attendance_CR(viewModel: AttendanceViewModel = viewModel()) {
 @Composable
 fun AttendanceCard(student: AttendanceRecord, onStatusChange: (Boolean) -> Unit) {
     AppCard {
-        Row(
-            modifier = Modifier
-                .padding(16.dp)
-                .fillMaxWidth(),
-            verticalAlignment = Alignment.CenterVertically
-        ) {
-            Text(
-                student.studentName,
-                modifier = Modifier.weight(1f),
-                style = MaterialTheme.typography.bodyLarge,
-                fontWeight = FontWeight.Medium
-            )
+        Row(modifier = Modifier.padding(16.dp).fillMaxWidth(), verticalAlignment = Alignment.CenterVertically) {
+            Column(modifier = Modifier.weight(1f)) {
+                Text(student.studentName, style = MaterialTheme.typography.bodyLarge, fontWeight = FontWeight.Medium)
+                Text(student.enrollmentNo, fontSize = 12.sp, color = Color.Gray)
+            }
 
             AttendanceToggleButton(
                 isSelected = student.isPresent,
                 label = "P",
-                activeColor = Color(0xFF6F7B5E), // Olive Green
+                activeColor = Color(0xFF6F7B5E),
                 onClick = { onStatusChange(true) }
             )
             Spacer(modifier = Modifier.width(12.dp))
-
             AttendanceToggleButton(
                 isSelected = !student.isPresent,
                 label = "A",
-                activeColor = Color(0xFFD9534F), // Red
+                activeColor = Color(0xFFD9534F),
                 onClick = { onStatusChange(false) }
             )
         }

@@ -1,210 +1,223 @@
 package com.igdtuw.mysync.screen
-import com.google.firebase.firestore.FirebaseFirestore
+
+import android.app.Activity
 import android.widget.Toast
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.contract.ActivityResultContracts
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
-import androidx.compose.foundation.border
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.ArrowDropDown
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.shadow
+import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.res.colorResource
-import androidx.compose.ui.text.font.FontFamily
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.input.PasswordVisualTransformation
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
+import com.google.android.gms.auth.api.signin.GoogleSignIn
+import com.google.android.gms.auth.api.signin.GoogleSignInOptions
+import com.google.android.gms.common.api.ApiException
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.auth.GoogleAuthProvider
+import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.firestore.Source
 import com.igdtuw.mysync.R
 import com.igdtuw.mysync.viewmodel.DashboardViewModel
 
 @Composable
 fun Login(navController: NavController, dashboardViewModel: DashboardViewModel) {
     val context = LocalContext.current
+    val auth = FirebaseAuth.getInstance()
+    val db = FirebaseFirestore.getInstance()
+    var isLoading by remember { mutableStateOf(false) }
 
+    // Your Web Client ID from Firebase Console
+    val webClientId = "641437759486-q5iq3vpkqnv7cbi3bsk6p7k0sc172c71.apps.googleusercontent.com"
 
-    var expanded by remember { mutableStateOf(false) }
-    var selectedRole by remember { mutableStateOf("Role") }
-    var email by remember { mutableStateOf("") }
-    var password by remember { mutableStateOf("") }
+    val gso = remember {
+        GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+            .requestIdToken(webClientId)
+            .requestEmail()
+            .build()
+    }
+    val googleSignInClient = remember { GoogleSignIn.getClient(context, gso) }
 
-    Column(
-        modifier = Modifier
-            .fillMaxSize()
-            .background(colorResource(id = R.color.light_olive)),
-        horizontalAlignment = Alignment.CenterHorizontally
-    ) {
-        Text(
-            text = "Login",
-            fontWeight = FontWeight.Bold,
-            fontFamily = FontFamily.SansSerif,
-            fontSize = 30.sp,
-            color = colorResource(id = R.color.olive),
-            modifier = Modifier.padding(top = 80.dp, bottom = 40.dp),
-        )
+    val launcher = rememberLauncherForActivityResult(
+        contract = ActivityResultContracts.StartActivityForResult()
+    ) { result ->
+        if (result.resultCode == Activity.RESULT_OK) {
+            val task = GoogleSignIn.getSignedInAccountFromIntent(result.data)
+            try {
+                val account = task.getResult(ApiException::class.java)!!
+                val credential = GoogleAuthProvider.getCredential(account.idToken, null)
 
-        // Role Dropdown
-        Box(
-            modifier = Modifier
-                .width(250.dp)
-                .height(50.dp)
-                .shadow(4.dp, RoundedCornerShape(24.dp))
-                .background(Color.White, RoundedCornerShape(24.dp))
-                .border(1.5.dp, colorResource(id = R.color.sage_green), RoundedCornerShape(24.dp))
-                .padding(horizontal = 16.dp)
-                .clickable { expanded = true })
-        {
-            Text(
-                text = selectedRole,
-                color = colorResource(id = R.color.olive),
-                fontWeight = FontWeight.Bold,
-                modifier = Modifier.align(Alignment.Center),
-                fontSize = 18.sp,
-            )
-            Icon(
-                imageVector = Icons.Default.ArrowDropDown,
-                contentDescription = null,
-                tint = colorResource(id = R.color.sage_green),
-                modifier = Modifier.align(Alignment.CenterEnd),
-            )
-            DropdownMenu(expanded = expanded, onDismissRequest = { expanded = false }) {
-                listOf("Student", "Class Representative").forEach { role ->
-                    DropdownMenuItem(
-                        text = { Text(text = role) },
-                        onClick = {
-                            selectedRole = role
-                            expanded = false
-                        })
-                }
-            }
-        }
+                // Step 1: Firebase Authentication
+                auth.signInWithCredential(credential).addOnCompleteListener { authTask ->
+                    if (authTask.isSuccessful) {
+                        val email = account.email?.lowercase() ?: ""
 
-        Spacer(modifier = Modifier.height(30.dp))
+                        // Speed Boost: Immediate feedback
+                        Toast.makeText(context, "Verifying Student Access...", Toast.LENGTH_SHORT).show()
 
-        // Email Field
-        OutlinedTextField(
-            value = email, // or password
-            onValueChange = { email = it },
-            placeholder = { Text(" Enter University Email ID") },
-            textStyle = LocalTextStyle.current.copy(fontSize = 16.sp, fontWeight = FontWeight.Bold),
-            singleLine = true, // Prevents vertical stretching
-            maxLines = 1,
-            modifier = Modifier
-                .fillMaxWidth(0.8f) // Uses 80% of screen width, safer than 250.dp
-                .shadow(4.dp, RoundedCornerShape(24.dp))
-                .background(Color.White, RoundedCornerShape(24.dp)),
-            shape = RoundedCornerShape(24.dp),
-            colors = OutlinedTextFieldDefaults.colors(
-                unfocusedBorderColor = colorResource(id = R.color.sage_green),
-                focusedBorderColor = colorResource(id = R.color.olive),
-                unfocusedContainerColor = Color.White,
-                focusedContainerColor = Color.White
-            )
-        )
+                        // Step 2: Firestore Whitelist Check
+                        db.collection("users").document(email).get(Source.DEFAULT)
+                            .addOnSuccessListener { doc ->
+                                if (doc.exists()) {
+                                    val role = doc.getString("role")?.lowercase() ?: "student"
+                                    dashboardViewModel.setUserData(email, "google_auth")
 
-        Spacer(modifier = Modifier.height(30.dp))
-
-        // Password Field
-        OutlinedTextField(
-            value = password, // or password
-            onValueChange = { password = it },
-            placeholder = { Text("Enter Password") },
-            textStyle = LocalTextStyle.current.copy(fontSize = 16.sp, fontWeight = FontWeight.Bold),
-            singleLine = true, // Prevents vertical stretching
-            maxLines = 1,
-            modifier = Modifier
-                .fillMaxWidth(0.8f) // Uses 80% of screen width, safer than 250.dp
-                .shadow(4.dp, RoundedCornerShape(24.dp))
-                .background(Color.White, RoundedCornerShape(24.dp)),
-            shape = RoundedCornerShape(24.dp),
-            colors = OutlinedTextFieldDefaults.colors(
-                unfocusedBorderColor = colorResource(id = R.color.sage_green),
-                focusedBorderColor = colorResource(id = R.color.olive),
-                unfocusedContainerColor = Color.White,
-                focusedContainerColor = Color.White
-            )
-        )
-
-        Spacer(modifier = Modifier.height(30.dp))
-
-        // Login Button
-        Button(
-            // Inside your Button in login.kt
-            onClick = {
-                val auth = FirebaseAuth.getInstance()
-
-                when {
-                    selectedRole == "Role" -> {
-                        Toast.makeText(context, "Please select a role", Toast.LENGTH_SHORT).show()
-                    }
-                    email.isBlank() -> {
-                        Toast.makeText(context, "Enter your Email", Toast.LENGTH_SHORT).show()
-                    }
-                    // SAFETY CHECK: Only allows IGDTUW IDs
-                    !email.endsWith("@igdtuw.ac.in") -> {
-                        Toast.makeText(context, "Use your @igdtuw.ac.in ID", Toast.LENGTH_SHORT).show()
-                    }
-                    password.isBlank() -> {
-                        Toast.makeText(context, "Enter your Password", Toast.LENGTH_SHORT).show()
-                    }
-                    else -> {
-                        val db = FirebaseFirestore.getInstance()
-
-                        auth.signInWithEmailAndPassword(email, password)
-                            .addOnCompleteListener { task ->
-                                if (task.isSuccessful) {
-                                    // Login was successful, now check the role in Firestore
-                                    db.collection("users").document(email).get()
-                                        .addOnSuccessListener { document ->
-                                            if (document != null && document.exists()) {
-                                                val dbRole = document.getString("role") // This gets "CR" or "Student"
-
-                                                // SECURITY CHECK: Does the selected role match the DB role?
-                                                // We normalize the strings (CR vs Class Representative)
-                                                val isCR = selectedRole == "Class Representative" && dbRole == "CR"
-                                                val isStudent = selectedRole == "Student" && dbRole == "Student"
-
-                                                if (isCR || isStudent) {
-                                                    // Role matches! Proceed to Dashboard
-                                                    dashboardViewModel.setUserData(email, password)
-                                                    val route = if (dbRole == "CR") "cr" else "student"
-
-                                                    navController.navigate(route) {
-                                                        popUpTo("login") { inclusive = true }
-                                                    }
-                                                } else {
-                                                    // Role mismatch
-                                                    auth.signOut() // Kick them out
-                                                    Toast.makeText(context, "Unauthorized role for this ID", Toast.LENGTH_LONG).show()
-                                                }
-                                            } else {
-                                                auth.signOut()
-                                                Toast.makeText(context, "User profile not found in database", Toast.LENGTH_LONG).show()
-                                            }
-                                        }
-                                        .addOnFailureListener {
-                                            Toast.makeText(context, "Database Error", Toast.LENGTH_SHORT).show()
-                                        }
+                                    // Step 3: Success Navigation
+                                    navController.navigate(role) {
+                                        popUpTo("login") { inclusive = true }
+                                    }
                                 } else {
-                                    Toast.makeText(context, "Auth Failed: ${task.exception?.message}", Toast.LENGTH_SHORT).show()
+                                    // Fail: User not in Firestore
+                                    auth.signOut()
+                                    googleSignInClient.signOut()
+                                    isLoading = false
+                                    Toast.makeText(context, "Access Denied: CSE '29 Whitelist Only", Toast.LENGTH_LONG).show()
                                 }
                             }
+                            .addOnFailureListener {
+                                isLoading = false
+                                Toast.makeText(context, "Database Error. Check connection.", Toast.LENGTH_SHORT).show()
+                            }
+                    } else {
+                        isLoading = false
+                        googleSignInClient.signOut()
+                        Toast.makeText(context, "Authentication Failed", Toast.LENGTH_SHORT).show()
                     }
                 }
-            },
-            modifier = Modifier.width(250.dp).shadow(4.dp, RoundedCornerShape(24.dp)),
-            shape = RoundedCornerShape(24.dp),
-            colors = ButtonDefaults.buttonColors(containerColor = colorResource(id = R.color.sage_green))
+            } catch (e: ApiException) {
+                isLoading = false
+                googleSignInClient.signOut()
+                Toast.makeText(context, "Login Cancelled", Toast.LENGTH_SHORT).show()
+            }
+        } else {
+            isLoading = false
+        }
+    }
+
+    Box(
+        modifier = Modifier
+            .fillMaxSize()
+            .background(
+                brush = Brush.verticalGradient(
+                    colors = listOf(
+                        Color(0xFFE8EDDF), // Sophisticated Light Sage
+                        Color(0xFFF5F5F5)  // Pearl White
+                    )
+                )
+            )
+    ) {
+        Column(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(horizontal = 30.dp),
+            horizontalAlignment = Alignment.CenterHorizontally,
+            verticalArrangement = Arrangement.Center
         ) {
-            Text("Login", color = colorResource(id = R.color.cream), fontWeight = FontWeight.Bold)
+            // App Branding Section
+            Text(
+                text = "My ClassSync",
+                fontSize = 44.sp,
+                fontWeight = FontWeight.ExtraBold,
+                color = Color(0xFF4F5D3D), // Deep Professional Olive
+                letterSpacing = (-1.5).sp
+            )
+
+            Text(
+                text = "Elevating CSE '29",
+                fontSize = 16.sp,
+                color = Color(0xFF707A65),
+                fontWeight = FontWeight.Medium,
+                textAlign = TextAlign.Center,
+                modifier = Modifier.padding(top = 4.dp)
+            )
+
+            Spacer(modifier = Modifier.height(80.dp))
+
+            if (isLoading) {
+                CircularProgressIndicator(
+                    color = Color(0xFF4F5D3D),
+                    strokeWidth = 3.dp
+                )
+            } else {
+                // Sleek Floating Card for Button
+                Surface(
+                    shape = RoundedCornerShape(24.dp),
+                    shadowElevation = 8.dp,
+                    color = Color.White,
+                    modifier = Modifier.fillMaxWidth()
+                ) {
+                    Column(
+                        modifier = Modifier.padding(24.dp),
+                        horizontalAlignment = Alignment.CenterHorizontally
+                    ) {
+                        Text(
+                            text = "Welcome Back",
+                            fontSize = 20.sp,
+                            fontWeight = FontWeight.Bold,
+                            color = Color(0xFF2D2D2D)
+                        )
+                        Spacer(modifier = Modifier.height(8.dp))
+                        Text(
+                            text = "Use your University email to continue",
+                            fontSize = 13.sp,
+                            color = Color.Gray,
+                            textAlign = TextAlign.Center
+                        )
+                        Spacer(modifier = Modifier.height(24.dp))
+
+                        // Modern Login Button
+                        Button(
+                            onClick = {
+                                isLoading = true
+                                launcher.launch(googleSignInClient.signInIntent)
+                            },
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .height(56.dp),
+                            shape = RoundedCornerShape(16.dp),
+                            colors = ButtonDefaults.buttonColors(
+                                containerColor = Color(0xFF4F5D3D)
+                            )
+                        ) {
+                            Row(verticalAlignment = Alignment.CenterVertically) {
+                                Image(
+                                    painter = painterResource(id = R.drawable.google),
+                                    contentDescription = null,
+                                    modifier = Modifier.size(20.dp)
+                                )
+                                Spacer(modifier = Modifier.width(12.dp))
+                                Text(
+                                    text = "Continue with Google",
+                                    color = Color.White,
+                                    fontSize = 15.sp,
+                                    fontWeight = FontWeight.SemiBold
+                                )
+                            }
+                        }
+                    }
+                }
+            }
+
+            Spacer(modifier = Modifier.height(40.dp))
+
+            // Footer
+            Text(
+                text = "Built for the Batch, by the Batch",
+                fontSize = 12.sp,
+                color = Color.Gray.copy(alpha = 0.6f),
+                fontWeight = FontWeight.Light
+            )
         }
     }
 }

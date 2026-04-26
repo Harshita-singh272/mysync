@@ -64,6 +64,7 @@ dependencies {
 
     // 3. GOOGLE SERVICES (Fixes the addOnSuccessListener error)
     implementation("com.google.android.gms:play-services-tasks:18.1.0")
+    implementation("com.google.android.gms:play-services-auth:21.1.1")
 
     // 4. NETWORKING & SERIALIZATION
     implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.6.3")

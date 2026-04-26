@@ -1,85 +1,88 @@
 package com.igdtuw.mysync.viewmodel
 
 import androidx.compose.runtime.mutableStateListOf
+import androidx.compose.runtime.mutableStateMapOf
 import androidx.lifecycle.ViewModel
 import com.google.firebase.firestore.FirebaseFirestore
 import com.igdtuw.mysync.model.AttendanceRecord
-import com.igdtuw.mysync.model.SubjectModel
-import com.igdtuw.mysync.model.SubjectAttendance
+
+// Helper data class inside the same file
+data class SubjectAttendance(
+    val name: String = "",
+    val attended: Int = 0,
+    val total: Int = 0,
+    val percentage: Float = 0f
+)
 
 class AttendanceViewModel : ViewModel() {
     private val db = FirebaseFirestore.getInstance()
-    var subjectAttendance = mutableStateListOf<SubjectAttendance>()
+
+    // For CR Screen
     var studentList = mutableStateListOf<AttendanceRecord>()
-    var subjects = mutableStateListOf<SubjectModel>()
+    var subjects = mutableStateListOf<String>()
+
+    // For Student Screen
+    var subjectAttendance = mutableStateListOf<SubjectAttendance>()
 
     init {
-        fetchStudents()
-        listenToSubjects()
+        fetchStudentsFromWhitelist()
+        fetchSubjects()
     }
 
-    fun fetchStudents() {
-        db.collection("users").whereEqualTo("role", "Student").get()
-            .addOnSuccessListener { result ->
-                studentList.clear()
-                for (doc in result) {
-                    studentList.add(AttendanceRecord(doc.id, doc.getString("name") ?: "Unknown", false))
-                }
+    private fun fetchStudentsFromWhitelist() {
+        db.collection("users").get().addOnSuccessListener { result ->
+            studentList.clear()
+            val list = result.map { doc ->
+                AttendanceRecord(
+                    studentName = doc.getString("name") ?: "Unknown",
+                    enrollmentNo = doc.getString("enrollmentNo") ?: "",
+                    email = doc.id,
+                    isPresent = false
+                )
             }
+            studentList.addAll(list.sortedBy { it.studentName })
+        }
     }
 
-    private fun listenToSubjects() {
-        db.collection("subjects").addSnapshotListener { v, _ ->
-            v?.let {
+    private fun fetchSubjects() {
+        db.collection("subjects").addSnapshotListener { snapshot, _ ->
+            if (snapshot != null) {
                 subjects.clear()
-                for (doc in it) {
-                    val sub = doc.toObject(SubjectModel::class.java)
-                    subjects.add(sub.copy(id = doc.id))
-                }
+                val subjectList = snapshot.map { doc -> doc.getString("name") ?: "" }
+                subjects.addAll(subjectList)
             }
+        }
+    }
+
+    // This clears the error in StudentScreen
+    fun fetchStudentAttendance(studentName: String) {
+        // Initializes the list with 0s so the UI can load without crashing
+        subjectAttendance.clear()
+        subjects.forEach { subject ->
+            subjectAttendance.add(SubjectAttendance(name = subject, attended = 0, total = 0, percentage = 0f))
         }
     }
 
     fun addSubject(name: String) {
-        if (name.isBlank()) return
-
-        val id = db.collection("subjects").document().id
-        val subjectData = SubjectModel(id = id, name = name, totalClasses = 0)
-
-        db.collection("subjects").document(id)
-            .set(subjectData)
-            .addOnSuccessListener {
-                println("Debug: Subject $name added successfully!")
-            }
-            .addOnFailureListener { e ->
-                println("Debug: Failed to add subject: ${e.message}")
-            }
+        db.collection("subjects").add(mapOf("name" to name))
     }
+
     fun markAllPresent(status: Boolean) {
-        for (i in studentList.indices) studentList[i] = studentList[i].copy(isPresent = status)
+        for (i in studentList.indices) {
+            studentList[i] = studentList[i].copy(isPresent = status)
+        }
     }
 
     fun uploadAttendance(subject: String, date: String) {
-        val data = hashMapOf(
-            "subject" to subject,
-            "date" to date,
-            "students" to studentList.map { mapOf("name" to it.studentName, "status" to if (it.isPresent) "P" else "A") }
-        )
-        db.collection("attendance").document("${subject}_$date").set(data)
-    }
-
-    fun fetchStudentAttendance(studentName: String) {
-        db.collection("attendance").addSnapshotListener { v, _ ->
-            val summary = mutableMapOf<String, Pair<Int, Int>>()
-            v?.forEach { doc ->
-                val sub = doc.getString("subject") ?: "Unknown"
-                val list = doc.get("students") as? List<Map<String, String>> ?: listOf()
-                val isP = list.any { it["name"].equals(studentName, ignoreCase = true) && it["status"] == "P" }
-                val cur = summary.getOrDefault(sub, Pair(0, 0))
-                summary[sub] = Pair(cur.first + (if (isP) 1 else 0), cur.second + 1)
-            }
-            subjectAttendance.clear()
-            subjectAttendance.addAll(summary.map { SubjectAttendance(it.key, it.value.first, it.value.second) })
+        val batch = db.batch()
+        studentList.forEach { student ->
+            val docRef = db.collection("attendance").document(date).collection(subject).document(student.email)
+            batch.set(docRef, mapOf(
+                "name" to student.studentName,
+                "status" to if (student.isPresent) "P" else "A",
+                "enrollmentNo" to student.enrollmentNo
+            ))
         }
+        batch.commit()
     }
 }

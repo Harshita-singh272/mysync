@@ -5,11 +5,7 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
-import com.igdtuw.mysync.screen.* // This imports ALL screens at once to avoid missing ones
-import com.igdtuw.mysync.viewmodel.AnnouncementViewModel
-import com.igdtuw.mysync.viewmodel.AssignmentViewModel
-import com.igdtuw.mysync.viewmodel.AttendanceViewModel
-import com.igdtuw.mysync.viewmodel.DashboardViewModel
+import com.igdtuw.mysync.screen.* import com.igdtuw.mysync.viewmodel.*
 
 @Composable
 fun AppNavigation() {
@@ -21,50 +17,29 @@ fun AppNavigation() {
         navController = navController,
         startDestination = "splashscreen"
     ) {
-        composable("login") { Login(navController, dashboardViewModel) }
         composable("splashscreen") { SplashScreen(navController) }
+        composable("login") { Login(navController, dashboardViewModel) }
         composable("student") { Dash_main(navController, dashboardViewModel) }
         composable("cr") { Dash_CR(navController, dashboardViewModel) }
-        composable("student_cr") { Dash_main_Cr(navController, dashboardViewModel) }
 
-        composable("assignment") {
-            val vm: AssignmentViewModel = viewModel()
-            AssignmentScreen(viewModel = vm, onEditClick = { })
-        }
-
+        // Announcements for Student
         composable("announcements") {
-            ViewAnnouncementScreen(announcementViewModel)
+            Announcement_Student(announcementViewModel)
         }
 
-        // --- ATTENDANCE ROUTES ---
+        // Announcements for CR (Combined Post + Manage)
+        composable("cr_announcements") {
+            Announcement_CR(announcementViewModel)
+        }
 
-
-        composable(route = "attendance") {
+        // Attendance & Assignments (Keeping your existing logic)
+        composable("attendance") {
             val vm: AttendanceViewModel = viewModel()
-
-            val nameForSearch = dashboardViewModel.dashboardData.value.user
-
-            StudentScreen(
-                viewModel = vm,
-                studentName = nameForSearch
-            )
+            StudentScreen(viewModel = vm, studentName = dashboardViewModel.dashboardData.value.user)
         }
-
-
         composable("cr_attendance") {
             val vm: AttendanceViewModel = viewModel()
             Attendance_CR(viewModel = vm)
-        }
-
-        // --- ANNOUNCEMENT & ASSIGNMENT FOR CR ---
-
-        composable("cr_assignment") {
-            val vm: AssignmentViewModel = viewModel()
-            AdminAssignmentScreen(viewModel = vm, onBack = { navController.popBackStack() })
-        }
-
-        composable("cr_announcements") {
-            PostAnnouncementScreen(announcementViewModel)
         }
     }
 }

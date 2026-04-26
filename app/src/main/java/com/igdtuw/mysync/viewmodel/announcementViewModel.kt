@@ -2,33 +2,67 @@ package com.igdtuw.mysync.viewmodel
 
 import androidx.compose.runtime.mutableStateListOf
 import androidx.lifecycle.ViewModel
+import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.firestore.Query
 import com.igdtuw.mysync.model.Announcement
+import com.google.firebase.Timestamp
 
 class AnnouncementViewModel : ViewModel() {
+    private val db = FirebaseFirestore.getInstance()
 
-    private val _announcements = mutableStateListOf<Announcement>()
+    var announcements = mutableStateListOf<Announcement>()
+        private set
 
-    val announcements: List<Announcement>
-        get() = _announcements
+    init {
+        listenForAnnouncements()
+    }
 
-    fun addAnnouncement(title: String, description: String) {
-        if (title.isNotBlank() && description.isNotBlank()) {
-            _announcements.add(Announcement(title, description))
+    private fun listenForAnnouncements() {
+        db.collection("announcements")
+            .orderBy("timestamp", Query.Direction.DESCENDING)
+            .addSnapshotListener { value, error ->
+                if (error != null) return@addSnapshotListener
+
+                value?.let {
+                    announcements.clear()
+                    for (doc in it) {
+                        // Ensure the mapping matches your Model exactly
+                        val announcement = doc.toObject(Announcement::class.java).copy(id = doc.id)
+                        announcements.add(announcement)
+                    }
+                }
+            }
+    }
+
+    fun updateAnnouncement(id: String, newTitle: String, newDesc: String) {
+        if (id.isNotEmpty()) {
+            val updates = mapOf(
+                "title" to newTitle,
+                "description" to newDesc
+            )
+            db.collection("announcements").document(id).update(updates)
+                .addOnSuccessListener { println("Update successful") }
+                .addOnFailureListener { e -> println("Error updating: ${e.message}") }
         }
     }
 
-    fun deleteAnnouncement(announcement: Announcement) {
-        _announcements.remove(announcement)
+    fun addAnnouncement(title: String, description: String, category: String) {
+        if (title.isNotBlank() && description.isNotBlank()) {
+            val newDoc = db.collection("announcements").document()
+            val announcement = Announcement(
+                id = newDoc.id,
+                title = title,
+                description = description,
+                category = category,
+                timestamp = Timestamp.now() // Explicitly set current time
+            )
+            newDoc.set(announcement)
+        }
     }
 
-    fun updateAnnouncement(
-        old: Announcement,
-        newTitle: String,
-        newDesc: String
-    ) {
-        val index = _announcements.indexOf(old)
-        if (index != -1) {
-            _announcements[index] = Announcement(newTitle, newDesc)
+    fun deleteAnnouncement(id: String) {
+        if (id.isNotEmpty()) {
+            db.collection("announcements").document(id).delete()
         }
     }
 }

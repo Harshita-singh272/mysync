@@ -1,8 +1,9 @@
 package com.igdtuw.mysync.model
 
 data class AttendanceRecord(
-    val studentEmail: String = "",
-    val studentName: String = "",
+    val studentName: String,
+    val enrollmentNo: String,
+    val email: String,
     val isPresent: Boolean = false
 )
 

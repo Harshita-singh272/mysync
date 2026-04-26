@@ -28,17 +28,8 @@ fun StudentScreen(viewModel: AttendanceViewModel, studentName: String) {
             .background(Color(0xFFF8F9FA))
             .padding(20.dp)
     ) {
-        Text(
-            text = "Your Attendance",
-            fontSize = 28.sp,
-            fontWeight = FontWeight.ExtraBold,
-            color = Color(0xFF2D2D2D)
-        )
-        Text(
-            text = "Viewing records for $studentName",
-            fontSize = 14.sp,
-            color = Color.Gray
-        )
+        Text(text = "Your Attendance", fontSize = 28.sp, fontWeight = FontWeight.ExtraBold, color = Color(0xFF2D2D2D))
+        Text(text = "Viewing records for $studentName", fontSize = 14.sp, color = Color.Gray)
 
         Spacer(modifier = Modifier.height(24.dp))
 
@@ -67,12 +58,7 @@ fun StudentScreen(viewModel: AttendanceViewModel, studentName: String) {
                                 horizontalArrangement = Arrangement.SpaceBetween,
                                 verticalAlignment = Alignment.CenterVertically
                             ) {
-                                Text(
-                                    item.name,
-                                    fontSize = 18.sp,
-                                    fontWeight = FontWeight.Bold,
-                                    color = Color(0xFF333333)
-                                )
+                                Text(item.name, fontSize = 18.sp, fontWeight = FontWeight.Bold, color = Color(0xFF333333))
                                 Text(
                                     "${item.percentage.toInt()}%",
                                     fontSize = 18.sp,
@@ -83,13 +69,9 @@ fun StudentScreen(viewModel: AttendanceViewModel, studentName: String) {
 
                             Spacer(modifier = Modifier.height(12.dp))
 
-                            // Smooth Progress Bar
                             LinearProgressIndicator(
                                 progress = item.percentage / 100f,
-                                modifier = Modifier
-                                    .fillMaxWidth()
-                                    .height(10.dp)
-                                    .clip(RoundedCornerShape(5.dp)),
+                                modifier = Modifier.fillMaxWidth().height(10.dp).clip(RoundedCornerShape(5.dp)),
                                 color = if (item.percentage < 75) Color(0xFFD32F2F) else Color(0xFF388E3C),
                                 trackColor = Color(0xFFE0E0E0)
                             )

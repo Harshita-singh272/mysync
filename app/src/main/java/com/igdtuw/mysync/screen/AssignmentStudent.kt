@@ -1,189 +1,186 @@
 package com.igdtuw.mysync.screen
 
+import android.content.Context
 import android.content.Intent
 import android.net.Uri
-import androidx.compose.animation.animateContentSize
-import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
+import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.*
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Delete
+import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.res.colorResource
+import androidx.compose.ui.text.font.Font
+import androidx.compose.ui.text.font.FontFamily
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
-import androidx.lifecycle.viewmodel.compose.viewModel
-import com.igdtuw.mysync.model.*
-import com.igdtuw.mysync.ui.theme.cream
-import com.igdtuw.mysync.ui.theme.olive
-import com.igdtuw.mysync.ui.theme.sageGreen
+import androidx.compose.ui.unit.sp
+import com.igdtuw.mysync.R
+import com.igdtuw.mysync.model.AssignmentItem
 import com.igdtuw.mysync.viewmodel.AssignmentViewModel
+import com.igdtuw.mysync.ui.theme.*
 
 @Composable
 fun AssignmentScreen(
-    viewModel: AssignmentViewModel = viewModel(),
+    viewModel: AssignmentViewModel,
     onEditClick: () -> Unit
 ) {
+    val assignments by viewModel.assignments.collectAsState()
+    val subjects = viewModel.subjects
     val context = LocalContext.current
-    val subjects by viewModel.subjects.collectAsState()
-    Box(
-        modifier = Modifier
-            .fillMaxSize()
-            .background(cream)
-    ) {
-        LazyColumn {
-            item {
-                Box(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .background(sageGreen.copy(alpha = 0.25f))
-                        .padding(vertical = 14.dp, horizontal = 12.dp)
+
+    LazyColumn(modifier = Modifier.fillMaxSize().background(cream)) {
+
+        item {
+            Box(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .background(color = colorResource(id = R.color.background))
+            ) {
+                Row(
+                    verticalAlignment = Alignment.CenterVertically,
+                    modifier = Modifier.padding(top = 25.dp,
+                        start =10.dp,
+                        bottom =10.dp)
                 ) {
                     Text(
-                        text = "ASSIGNMENT",
-                        color = olive,
-                        style = MaterialTheme.typography.headlineMedium
+                        "ASSIGNMENT",
+                        fontWeight = FontWeight.Bold,
+                        fontFamily = FontFamily(Font(R.font.nunito_bold)),
+                        color = colorResource(id = R.color.dark_grey),
+                        fontSize = 29.sp
                     )
                 }
-                Spacer(modifier = Modifier.height(12.dp))
             }
-//            items(subject) { subject ->
-//                var expanded by remember { mutableStateOf(false) }
-//                Card(
-//                    modifier = Modifier
-//                        .fillMaxWidth()
-//                        .padding(8.dp)
-//                        .clickable { expanded = !expanded }
-//                        .animateContentSize(),
-//                    colors = CardDefaults.cardColors(containerColor = olive)
-//                ) {
-//                    Column(modifier = Modifier.padding(12.dp)) {
-//                        Text(
-//                            text = subject.name,
-//                            color = cream,
-//                            style = MaterialTheme.typography.titleMedium
-//                        )
-//                        if (expanded) {
-//                            Spacer(modifier = Modifier.height(8.dp))
-//                            subject.theory.forEach {
-//                                Text(
-//                                    text = "• ${it.title}",
-//                                    color = sageGreen,
-//                                    modifier = Modifier
-//                                        .padding(vertical = 4.dp)
-//                                        .clickable {
-//                                            context.startActivity(
-//                                                Intent(
-//                                                    Intent.ACTION_VIEW,
-//                                                    Uri.parse(it.link)
-//                                                )
-//                                            )
-//                                        }
-//                                )
-//                            }
-//                        }
-//                    }
-//                }
-//            }
-            items(subjects) { subject ->
-                var expanded by remember(subject.name) { mutableStateOf(false) }
+        }
 
-                Card(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(8.dp)
-                        .clickable { expanded = !expanded }
-                        .animateContentSize(),
-                    colors = CardDefaults.cardColors(containerColor = olive)
+        items(subjects) { subject ->
+
+            var expanded by remember { mutableStateOf(false) }
+
+            val theoryList = assignments.filter {
+                it.subject == subject && it.type == "theory"
+            }
+
+            val labList = assignments.filter {
+                it.subject == subject && it.type == "lab"
+            }
+
+            Card(
+                modifier = Modifier
+                    .padding(8.dp)
+                    .fillMaxWidth()
+                    .clickable { expanded = !expanded }
+                    .border(
+                        width = if (expanded) 3.dp else 0.dp,
+                        color = colorResource(id = R.color.sage_green),
+                        shape = RoundedCornerShape(12.dp)
+                    ),
+                colors = CardDefaults.cardColors(
+                    containerColor = olive
+                ),
                 ) {
-                    Column(modifier = Modifier.padding(12.dp)) {
+                Column(modifier = Modifier.padding(12.dp)) {
+                    Row() {
                         Text(
-                            text = subject.name,
-                            color = cream,
-                            style = MaterialTheme.typography.titleMedium
-                        )
+                            subject, color = cream,
+                            fontFamily = FontFamily(Font(R.font.nunito_bold)),
+                                fontWeight = FontWeight.Bold,
+                                fontSize= 15.sp)
+                        Column(
+                            modifier = Modifier.fillMaxWidth(),
+                            horizontalAlignment = Alignment.End
+                        ) {
+                            Text(
+                                text = "Theory: ${theoryList.size}       Lab: ${labList.size}",
+                                color = colorResource(id = R.color.dark_grey),
+                                fontWeight = FontWeight.SemiBold,
+                                fontFamily = FontFamily(Font(R.font.nunito_light))
+                            )
+                        }
+                    }
+                    if (expanded) {
+                        Column(modifier = Modifier.padding(vertical = 6.dp)) {
+                            Text("Theory", color =colorResource(id = R.color.sage_gray),
+                                fontFamily = FontFamily(Font(R.font.merriweather_24pt_bold)),
+                                fontSize = 15.sp)
+                            if (theoryList.isNotEmpty()) {
+                                theoryList.forEach {
 
-                        if (expanded) {
-                            Spacer(modifier = Modifier.height(8.dp))
-                            if (subject.theory.isNotEmpty()) {
-                                Text("Theory", color = sageGreen)
+                                    Column() {
+                                        AssignmentItemUI(it, context)
 
-                                subject.theory.forEach {
-                                    Text(
-                                        text = "• ${it.title}",
-                                        color = cream,
-                                        modifier = Modifier
-                                            .padding(vertical = 4.dp)
-                                            .clickable {
-                                                context.startActivity(
-                                                    Intent(Intent.ACTION_VIEW, Uri.parse(it.link))
-                                                )
-                                            }
-                                    )
+                                        Spacer(modifier = Modifier.height(5.dp))
+                                        HorizontalDivider(
+                                            thickness = 1.dp,
+                                            color = colorResource(id = R.color.light_sage_gray)
+                                        )
+                                    }
                                 }
+
+                            } else {
+                                Text(
+                                    "No Theory Assignment",
+                                    color = colorResource(id = R.color.sage_green)
+                                )
                             }
-                            if (subject.lab.isNotEmpty()) {
-                                Spacer(modifier = Modifier.height(8.dp))
+                            Spacer(modifier = Modifier.height(10.dp))
+                            Text("Lab",color =colorResource(id = R.color.sage_gray),
+                                fontFamily = FontFamily(Font(R.font.merriweather_24pt_bold)),
+                                fontSize = 15.sp)
+                            if (labList.isNotEmpty()) {
+                                labList.forEach {
 
-                                Text("Lab", color = sageGreen)
+                                    Column() {
+                                        AssignmentItemUI(it, context)
 
-                                subject.lab.forEach {
-                                    Text(
-                                        text = "• ${it.title}",
-                                        color = cream,
-                                        modifier = Modifier
-                                            .padding(vertical = 4.dp)
-                                            .clickable {
-                                                context.startActivity(
-                                                    Intent(Intent.ACTION_VIEW, Uri.parse(it.link))
-                                                )
-                                            }
-                                    )
+                                        Spacer(modifier = Modifier.height(5.dp))
+                                        HorizontalDivider(
+                                            thickness = 1.dp,
+                                            color = colorResource(id = R.color.light_sage_gray)
+                                        )
+                                    }
                                 }
+                            } else {
+                                Text(
+                                    "No Lab Assignment",
+                                    color = colorResource(id = R.color.sage_green)
+                                )
                             }
                         }
                     }
                 }
             }
         }
-//        FloatingActionButton(
-//            onClick = onEditClick,
-//            containerColor = sageGreen,
-//            modifier = Modifier
-//                .align(Alignment.BottomEnd)
-//                .padding(16.dp)
-//        ) {
-//            Text("+", color = cream)
-//        }
     }
 }
-//
-//@Preview(showBackground = true)
-//@Composable
-//fun AssignmentScreenPreview() {
-//    AssignmentScreen(
-//        subjects = listOf(
-//            SubjectData(
-//                name = "Mathematics",
-//                theory = mutableListOf(
-//                    AssignmentItem(title = "Assignment 1", link = "https://example.com"),
-//                    AssignmentItem(title = "Assignment 2", link = "https://example.com")
-//                ),
-//                lab = mutableListOf(
-//                    AssignmentItem(title = "Lab 1 - Experiment", link = "https://example.com")
-//                )
-//            ),
-//            SubjectData(
-//                name = "Physics",
-//                theory = mutableListOf(
-//                    AssignmentItem(title = "Wave Optics", link = "https://example.com")
-//                ),
-//                lab = mutableListOf()
-//            )
-//        ),
-//        onEditClick = {}
-//    )
-//}
+@Composable
+fun AssignmentItemUI(item: AssignmentItem, context: Context) {
+    Column(modifier = Modifier.padding(vertical = 6.dp)) {
+        Text(
+            text = item.title,
+            color = Color.White,
+            style = MaterialTheme.typography.bodyLarge,
+            modifier = Modifier.clickable {
+                context.startActivity(
+                    Intent(Intent.ACTION_VIEW, Uri.parse(item.link))
+                )
+            }
+        )
+        Spacer(modifier = Modifier.height(4.dp))
+        if (item.description.isNotEmpty()) {
+            Text(
+                text = item.description,
+                color = Color.LightGray,
+                style = MaterialTheme.typography.bodySmall
+            )
+        }
+    }
+}

@@ -18,6 +18,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.wrapContentHeight
+import androidx.compose.foundation.layout.wrapContentWidth
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
@@ -53,7 +54,7 @@ fun Dash_main_Cr(navController: NavController,dashboardViewModel: DashboardViewM
     }
     val data = dashboardViewModel.dashboardData.value
     val context = LocalContext.current
-    Box(modifier = Modifier.fillMaxSize()) {
+    Box(modifier = Modifier.fillMaxSize().padding(bottom = 7.dp)) {
         LazyColumn(
             modifier = Modifier
                 .fillMaxSize()
@@ -137,7 +138,8 @@ fun Dash_main_Cr(navController: NavController,dashboardViewModel: DashboardViewM
                     },
                     elevation = ButtonDefaults.buttonElevation(defaultElevation = 5.dp),
                     shape = RoundedCornerShape(15.dp),
-                    modifier = Modifier.fillMaxWidth(0.97f)
+                    modifier = Modifier .fillMaxWidth()
+                        .wrapContentWidth(Alignment.CenterHorizontally)
                         .height(155.dp)
                         .padding(5.dp),
                     colors = ButtonDefaults.buttonColors(containerColor = colorResource(id = R.color.off_white))
@@ -190,7 +192,8 @@ fun Dash_main_Cr(navController: NavController,dashboardViewModel: DashboardViewM
                         onClick = {navController.navigate("attendance")},
                         elevation = ButtonDefaults.buttonElevation(defaultElevation = 5.dp),
                         shape = RoundedCornerShape(15.dp),
-                        modifier = Modifier.fillMaxWidth(0.97f)
+                        modifier = Modifier .fillMaxWidth()
+                            .wrapContentWidth(Alignment.CenterHorizontally)
                             .height(155.dp)
                             .padding(
                                 top = 5.dp,
@@ -244,15 +247,17 @@ fun Dash_main_Cr(navController: NavController,dashboardViewModel: DashboardViewM
                                         color = colorResource(id = R.color.grey),
                                         fontSize = 18.sp,
                                         fontFamily = FontFamily(Font(R.font.nunito_semibold)),
-                                        fontWeight = FontWeight.SemiBold
+                                        fontWeight = FontWeight.SemiBold,
+                                        modifier = Modifier.align(Alignment.CenterVertically)
                                     )
                                     Spacer(modifier = Modifier.width(8.dp))
                                     Text(
-                                        text = data.branch,
+                                        text = "${data.branch}",
                                         color = colorResource(id = R.color.grey),
                                         fontSize = 15.sp,
                                         fontFamily = FontFamily(Font(R.font.nunito_light)),
-                                        fontWeight = FontWeight.Bold
+                                        fontWeight = FontWeight.Bold,
+                                        modifier = Modifier.align(Alignment.CenterVertically)
                                     )
                                 }
                             }
@@ -265,7 +270,8 @@ fun Dash_main_Cr(navController: NavController,dashboardViewModel: DashboardViewM
                                         color = colorResource(id = R.color.grey),
                                         fontSize = 18.sp,
                                         fontFamily = FontFamily(Font(R.font.nunito_semibold)),
-                                        fontWeight = FontWeight.SemiBold
+                                        fontWeight = FontWeight.SemiBold,
+                                        modifier = Modifier.align(Alignment.CenterVertically)
                                     )
                                     Spacer(modifier = Modifier.width(5.dp))
                                     Text(
@@ -273,7 +279,8 @@ fun Dash_main_Cr(navController: NavController,dashboardViewModel: DashboardViewM
                                         color = colorResource(id = R.color.grey),
                                         fontSize = 15.sp,
                                         fontFamily = FontFamily(Font(R.font.nunito_light)),
-                                        fontWeight = FontWeight.Bold
+                                        fontWeight = FontWeight.Bold,
+                                        modifier = Modifier.align(Alignment.CenterVertically)
                                     )
                                 }
                             }
@@ -285,7 +292,8 @@ fun Dash_main_Cr(navController: NavController,dashboardViewModel: DashboardViewM
                         onClick = {navController.navigate("announcements")},
                         elevation = ButtonDefaults.buttonElevation(defaultElevation = 5.dp),
                         shape = RoundedCornerShape(15.dp),
-                        modifier = Modifier.fillMaxWidth(0.97f)
+                        modifier = Modifier .fillMaxWidth()
+                            .wrapContentWidth(Alignment.CenterHorizontally)
                             .height(155.dp)
                             .padding(5.dp),
                         colors = ButtonDefaults.buttonColors(containerColor = colorResource(id = R.color.off_white))

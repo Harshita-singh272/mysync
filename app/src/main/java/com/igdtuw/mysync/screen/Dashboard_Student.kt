@@ -20,6 +20,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.wrapContentHeight
+import androidx.compose.foundation.layout.wrapContentWidth
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
@@ -55,7 +56,7 @@ fun Dash_main(navController: NavController, dashboardViewModel: DashboardViewMod
     }
     val data = dashboardViewModel.dashboardData.value
     val context = LocalContext.current
-    Box(modifier = Modifier.fillMaxSize()) {
+    Box(modifier = Modifier.fillMaxSize().padding(bottom = 7.dp)) {
         LazyColumn(
             modifier = Modifier
                 .fillMaxSize()
@@ -183,7 +184,8 @@ fun Dash_main(navController: NavController, dashboardViewModel: DashboardViewMod
                     onClick = {navController.navigate("attendance")},
                     elevation = ButtonDefaults.buttonElevation(defaultElevation = 5.dp),
                     shape = RoundedCornerShape(15.dp),
-                    modifier = Modifier.fillMaxWidth(0.97f)
+                    modifier = Modifier .fillMaxWidth()
+                        .wrapContentWidth(Alignment.CenterHorizontally)
                         .height(155.dp)
                         .padding(
                             top = 5.dp,
@@ -280,7 +282,8 @@ fun Dash_main(navController: NavController, dashboardViewModel: DashboardViewMod
                         },
                         elevation = ButtonDefaults.buttonElevation(defaultElevation = 5.dp),
                         shape = RoundedCornerShape(15.dp),
-                        modifier = Modifier.fillMaxWidth(0.97f)
+                        modifier = Modifier .fillMaxWidth()
+                            .wrapContentWidth(Alignment.CenterHorizontally)
                             .height(155.dp)
                             .padding(5.dp),
                         colors = ButtonDefaults.buttonColors(containerColor = colorResource(id = R.color.off_white))

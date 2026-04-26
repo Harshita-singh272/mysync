@@ -12,6 +12,7 @@
           "package_name": "com.igdtuw.mysync"
         }
       },
+<<<<<<< Updated upstream
       "oauth_client": [
         {
           "client_id": "641437759486-n5he10q30nr30vf7iic27fc5u02n43si.apps.googleusercontent.com",
@@ -26,6 +27,9 @@
           "client_type": 3
         }
       ],
+=======
+      "oauth_client": [],
+>>>>>>> Stashed changes
       "api_key": [
         {
           "current_key": "AIzaSyCnBwn9czJhbWYRP4dzAAWw625GE-fiJ8Y"
@@ -33,12 +37,16 @@
       ],
       "services": {
         "appinvite_service": {
+<<<<<<< Updated upstream
           "other_platform_oauth_client": [
             {
               "client_id": "641437759486-q5iq3vpkqnv7cbi3bsk6p7k0sc172c71.apps.googleusercontent.com",
               "client_type": 3
             }
           ]
+=======
+          "other_platform_oauth_client": []
+>>>>>>> Stashed changes
         }
       }
     }

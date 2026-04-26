@@ -1,5 +1,6 @@
 package com.igdtuw.mysync.screen
 
+import android.R.attr.padding
 import android.widget.Toast
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -61,7 +62,7 @@ fun AdminAssignmentScreen(
 
         Column(
             modifier = Modifier
-//                .padding(paddingValues)
+                .padding(paddingValues)
                 .fillMaxSize()
                 .background(cream)
                 .padding(16.dp)

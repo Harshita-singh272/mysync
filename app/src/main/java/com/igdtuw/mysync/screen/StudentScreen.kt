@@ -11,9 +11,11 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.igdtuw.mysync.ui.theme.olive
 import com.igdtuw.mysync.viewmodel.AttendanceViewModel
 
 @Composable
@@ -26,67 +28,100 @@ fun StudentScreen(viewModel: AttendanceViewModel, studentName: String) {
         modifier = Modifier
             .fillMaxSize()
             .background(Color(0xFFF8F9FA))
-            .padding(20.dp)
+
     ) {
-        Text(text = "Your Attendance", fontSize = 28.sp, fontWeight = FontWeight.ExtraBold, color = Color(0xFF2D2D2D))
-        Text(text = "Viewing records for $studentName", fontSize = 14.sp, color = Color.Gray)
-
-        Spacer(modifier = Modifier.height(24.dp))
-
-        if (viewModel.subjectAttendance.isEmpty()) {
-            Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
-                Column(horizontalAlignment = Alignment.CenterHorizontally) {
-                    Text("No attendance history found.", color = Color.LightGray)
-                    Text("Check back once the CR uploads data.", fontSize = 12.sp, color = Color.LightGray)
-                }
-            }
-        } else {
-            LazyColumn(
-                verticalArrangement = Arrangement.spacedBy(16.dp),
-                modifier = Modifier.fillMaxSize()
+        Box(modifier = Modifier.fillMaxWidth().background(
+            color = Color(0xFFA3B18A )),
+        ) {
+            Column(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(start = 20.dp, top = 35.dp, bottom = 10.dp)
             ) {
-                items(viewModel.subjectAttendance) { item ->
-                    Surface(
-                        shape = RoundedCornerShape(20.dp),
-                        shadowElevation = 3.dp,
-                        color = Color.White,
-                        modifier = Modifier.fillMaxWidth()
-                    ) {
-                        Column(modifier = Modifier.padding(20.dp)) {
-                            Row(
-                                modifier = Modifier.fillMaxWidth(),
-                                horizontalArrangement = Arrangement.SpaceBetween,
-                                verticalAlignment = Alignment.CenterVertically
-                            ) {
-                                Text(item.name, fontSize = 18.sp, fontWeight = FontWeight.Bold, color = Color(0xFF333333))
+                Text(
+                    text = "Your Attendance", fontSize = 32.sp,
+                    fontWeight = FontWeight.Black,
+                    color = Color(0xFF424D2F)
+                )
+                Text(
+                    text = "Viewing records for $studentName",
+                    fontSize = 14.sp,
+                    color = Color(0xFF343a40)
+                )
+            }
+        }
+        Spacer(modifier = Modifier.height(24.dp))
+//        Column(modifier= Modifier .padding(20.dp)) {
+
+            if (viewModel.subjectAttendance.isEmpty()) {
+                Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
+                    Column(horizontalAlignment = Alignment.CenterHorizontally) {
+                        Text("No attendance history found.", color = Color.LightGray)
+                        Text(
+                            "Check back once the CR uploads data.",
+                            fontSize = 12.sp,
+                            color = Color.LightGray
+                        )
+                    }
+                }
+            } else {
+                LazyColumn(
+                    verticalArrangement = Arrangement.spacedBy(16.dp),
+                    modifier = Modifier.fillMaxSize()
+                ) {
+                    items(viewModel.subjectAttendance) { item ->
+                        Surface(
+                            shape = RoundedCornerShape(20.dp),
+                            shadowElevation = 3.dp,
+                            color = Color.White,
+                            modifier = Modifier.fillMaxWidth()
+                        ) {
+                            Column(modifier = Modifier.padding(20.dp)) {
+                                Row(
+                                    modifier = Modifier.fillMaxWidth(),
+                                    horizontalArrangement = Arrangement.SpaceBetween,
+                                    verticalAlignment = Alignment.CenterVertically
+                                ) {
+                                    Text(
+                                        item.name,
+                                        fontSize = 18.sp,
+                                        fontWeight = FontWeight.Bold,
+                                        color = Color(0xFF333333)
+                                    )
+                                    Text(
+                                        "${item.percentage.toInt()}%",
+                                        fontSize = 18.sp,
+                                        fontWeight = FontWeight.ExtraBold,
+                                        color = if (item.percentage < 75) Color(0xFFD32F2F) else Color(
+                                            0xFF388E3C
+                                        )
+                                    )
+                                }
+
+                                Spacer(modifier = Modifier.height(12.dp))
+
+                                LinearProgressIndicator(
+                                    progress = item.percentage / 100f,
+                                    modifier = Modifier.fillMaxWidth().height(10.dp)
+                                        .clip(RoundedCornerShape(5.dp)),
+                                    color = if (item.percentage < 75) Color(0xFFD32F2F) else Color(
+                                        0xFF388E3C
+                                    ),
+                                    trackColor = Color(0xFFE0E0E0)
+                                )
+
+                                Spacer(modifier = Modifier.height(10.dp))
+
                                 Text(
-                                    "${item.percentage.toInt()}%",
-                                    fontSize = 18.sp,
-                                    fontWeight = FontWeight.ExtraBold,
-                                    color = if (item.percentage < 75) Color(0xFFD32F2F) else Color(0xFF388E3C)
+                                    text = "${item.attended} classes attended out of ${item.total}",
+                                    fontSize = 13.sp,
+                                    color = Color.Gray
                                 )
                             }
-
-                            Spacer(modifier = Modifier.height(12.dp))
-
-                            LinearProgressIndicator(
-                                progress = item.percentage / 100f,
-                                modifier = Modifier.fillMaxWidth().height(10.dp).clip(RoundedCornerShape(5.dp)),
-                                color = if (item.percentage < 75) Color(0xFFD32F2F) else Color(0xFF388E3C),
-                                trackColor = Color(0xFFE0E0E0)
-                            )
-
-                            Spacer(modifier = Modifier.height(10.dp))
-
-                            Text(
-                                text = "${item.attended} classes attended out of ${item.total}",
-                                fontSize = 13.sp,
-                                color = Color.Gray
-                            )
                         }
                     }
                 }
             }
-        }
+
     }
 }

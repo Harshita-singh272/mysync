@@ -44,7 +44,7 @@ fun Login(navController: NavController, dashboardViewModel: DashboardViewModel) 
             verticalArrangement = Arrangement.Center
         ) {
             Text(
-                text = "My ClassSync",
+                text = "ClassSync",
                 fontSize = 44.sp,
                 fontWeight = FontWeight.ExtraBold,
                 color = Color(0xFF4F5D3D),

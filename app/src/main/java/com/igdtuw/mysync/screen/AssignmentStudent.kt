@@ -1,5 +1,6 @@
 package com.igdtuw.mysync.screen
 
+import android.R.color.white
 import android.content.Context
 import android.content.Intent
 import android.net.Uri
@@ -22,9 +23,11 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.igdtuw.mysync.R
 import com.igdtuw.mysync.model.AssignmentItem
 import com.igdtuw.mysync.viewmodel.AssignmentViewModel
 import com.igdtuw.mysync.ui.theme.*
@@ -44,23 +47,31 @@ fun AssignmentScreen(
             .background(cream)
     ) {
         item {
-            Column(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(start = 20.dp, top = 40.dp, bottom = 20.dp)
-            ) {
-                Text(
-                    text = "Assignments",
-                    fontSize = 32.sp,
-                    fontWeight = FontWeight.Black,
-                    color = olive
-                )
-                Text(
-                    text = "Track your CSE '29 submissions",
-                    fontSize = 14.sp,
-                    color = Color.Gray
-                )
+            Box(modifier = Modifier.fillMaxWidth().background(
+//                color = colorResource(id = R.color.light_sage_gray)
+            color = Color(0xFFA3B18A )),
+                ) {
+                Column(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(start = 20.dp, top = 35.dp, bottom = 10.dp)
+                ) {
+                    Text(
+                        text = "Assignments",
+                        fontSize = 32.sp,
+                        fontWeight = FontWeight.Black,
+                        color =colorResource(id= R.color.dark_olive)
+                    )
+                    Spacer(modifier = Modifier.height(5.dp))
+                    Text(
+                        text = "Track your CSE '29 submissions",
+                        fontSize = 14.sp,
+                        color = colorResource(id = R.color.dark_grey)
+                    )
+                }
             }
+            Spacer(modifier = Modifier.height(10.dp))
+
         }
 
         items(subjects) { subject ->

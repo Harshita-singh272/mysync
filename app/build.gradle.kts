@@ -78,4 +78,7 @@ dependencies {
 
     debugImplementation(libs.androidx.compose.ui.tooling)
     debugImplementation(libs.androidx.compose.ui.test.manifest)
+        // Add this line if it's missing
+    implementation("com.google.firebase:firebase-database-ktx:20.3.0")
+
 }

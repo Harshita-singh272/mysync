@@ -81,3 +81,64 @@ class AttendanceViewModel : ViewModel() {
         batch.commit()
     }
 }
+//package com.igdtuw.mysync.viewmodel
+//import com.google.firebase.database.FirebaseDatabase
+//import com.google.firebase.database.DatabaseReference
+//import androidx.compose.runtime.mutableStateListOf
+//import androidx.lifecycle.ViewModel
+//import com.igdtuw.mysync.model.AttendanceRecord
+//
+//class AttendanceViewModel : ViewModel() {
+//    private val database = FirebaseDatabase.getInstance().getReference("Attendance")
+//
+//    var studentList = mutableStateListOf<AttendanceRecord>()
+//        private set
+//
+//    var subjects = mutableStateListOf<String>()
+//        private set
+//
+//    // Mock data loader - Replace with your Firebase fetch logic for students
+//    init {
+//        loadInitialData()
+//    }
+//
+//    private fun loadInitialData() {
+//        // Example initial load
+//        subjects.addAll(listOf("Applied Physics", "Manufacturing Processes", "Data Structures"))
+//        studentList.addAll(listOf(
+//            AttendanceRecord("Aayushree Malviya", "00101012024", "aayushree@igdtuw.ac.in", false),
+//            AttendanceRecord("Adya", "00201012024", "adya@igdtuw.ac.in", false)
+//        ))
+//    }
+//
+//    fun toggleStudentStatus(email: String, isChecked: Boolean) {
+//        val index = studentList.indexOfFirst { it.email == email }
+//        if (index != -1) {
+//            // Replacing the object in the list triggers the UI update
+//            studentList[index] = studentList[index].copy(isPresent = isChecked)
+//        }
+//    }
+//
+//    fun markAllPresent(isPresent: Boolean) {
+//        for (i in studentList.indices) {
+//            studentList[i] = studentList[i].copy(isPresent = isPresent)
+//        }
+//    }
+//
+//    fun addSubject(name: String) {
+//        if (!subjects.contains(name)) subjects.add(name)
+//    }
+//
+//    fun uploadAttendance(subject: String, date: String) {
+//        val attendanceData = studentList.map {
+//            mapOf(
+//                "name" to it.studentName,
+//                "enrollment" to it.enrollmentNo,
+//                "status" to if (it.isPresent) "Present" else "Absent"
+//            )
+//        }
+//
+//        // Stores in: Attendance -> SubjectName -> Date -> StudentList
+//        database.child(subject).child(date).setValue(attendanceData)
+//    }
+//}

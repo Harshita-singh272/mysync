@@ -44,7 +44,7 @@ fun Announcement_Student(viewModel: AnnouncementViewModel) {
                 )
             }
         }
-
+        HorizontalDivider(thickness = 1.dp, color = colorResource(id = R.color.border))
         LazyColumn(contentPadding = PaddingValues(16.dp), verticalArrangement = Arrangement.spacedBy(12.dp)) {
             items(announcements) { item ->
 //                Card(modifier = Modifier.fillMaxWidth(), colors = CardDefaults.cardColors(containerColor = Color.White)) {

@@ -27,6 +27,7 @@ fun AppNavigation() {
         composable("login") {
             Login(navController, dashboardViewModel)
         }
+
         composable("student_cr") {
             Dash_main_Cr(navController, dashboardViewModel)
         }
@@ -50,11 +51,13 @@ fun AppNavigation() {
             )
         }
 
+        // --- FIXED ATTENDANCE ROUTE ---
         composable("attendance") {
             val vm: AttendanceViewModel = viewModel()
             StudentScreen(
                 viewModel = vm,
-                studentName = dashboardViewModel.dashboardData.value.user
+                studentName = dashboardViewModel.dashboardData.value.user,
+                studentEmail = dashboardViewModel.dashboardData.value.email // Added email parameter
             )
         }
 

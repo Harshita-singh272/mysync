@@ -1,7 +1,6 @@
 package com.igdtuw.mysync.viewmodel
 
 import androidx.compose.runtime.mutableStateListOf
-import androidx.compose.runtime.mutableStateMapOf
 import androidx.lifecycle.ViewModel
 import com.google.firebase.firestore.FirebaseFirestore
 import com.igdtuw.mysync.model.AttendanceRecord
@@ -15,7 +14,6 @@ data class SubjectAttendance(
 
 class AttendanceViewModel : ViewModel() {
     private val db = FirebaseFirestore.getInstance()
-
     var studentList = mutableStateListOf<AttendanceRecord>()
     var subjects = mutableStateListOf<String>()
     var subjectAttendance = mutableStateListOf<SubjectAttendance>()
@@ -44,22 +42,50 @@ class AttendanceViewModel : ViewModel() {
         db.collection("subjects").addSnapshotListener { snapshot, _ ->
             if (snapshot != null) {
                 subjects.clear()
-                val subjectList = snapshot.map { doc -> doc.getString("name") ?: "" }
-                subjects.addAll(subjectList)
+                subjects.addAll(snapshot.map { it.getString("name") ?: "" })
             }
         }
     }
 
-    fun fetchStudentAttendance(studentName: String) {
+    fun fetchStudentAttendance(studentEmail: String) {
+        if (studentEmail.isBlank()) return
 
-        subjectAttendance.clear()
-        subjects.forEach { subject ->
-            subjectAttendance.add(SubjectAttendance(name = subject, attended = 0, total = 0, percentage = 0f))
+        // Step 1: Ensure subjects are fetched first
+        db.collection("subjects").get().addOnSuccessListener { subjectDocs ->
+            val allSubjects = subjectDocs.map { it.getString("name") ?: "" }
+            subjectAttendance.clear()
+
+            // Step 2: For each subject, get the attendance record
+            allSubjects.forEach { subjectName ->
+                db.collection("attendance").document(subjectName).addSnapshotListener { doc, _ ->
+                    val data = doc?.data ?: emptyMap<String, Any>()
+                    var attendedCount = 0
+                    val totalClasses = data.size
+
+                    data.forEach { (_, value) ->
+                        val presentList = value as? List<*>
+                        if (presentList?.any { it.toString().trim().lowercase() == studentEmail.trim().lowercase() } == true) {
+                            attendedCount++
+                        }
+                    }
+
+                    val percent = if (totalClasses > 0) (attendedCount.toFloat() / totalClasses) * 100 else 0f
+                    val record = SubjectAttendance(subjectName, attendedCount, totalClasses, percent)
+
+                    val index = subjectAttendance.indexOfFirst { it.name == subjectName }
+                    if (index != -1) {
+                        subjectAttendance[index] = record
+                    } else {
+                        subjectAttendance.add(record)
+                    }
+                }
+            }
+
+            // Step 3: If no subjects exist at all, add a "No Data" placeholder to stop the spinner
+            if (allSubjects.isEmpty()) {
+                subjectAttendance.add(SubjectAttendance("No subjects found", 0, 0, 0f))
+            }
         }
-    }
-
-    fun addSubject(name: String) {
-        db.collection("subjects").add(mapOf("name" to name))
     }
 
     fun markAllPresent(status: Boolean) {
@@ -69,76 +95,15 @@ class AttendanceViewModel : ViewModel() {
     }
 
     fun uploadAttendance(subject: String, date: String) {
-        val batch = db.batch()
-        studentList.forEach { student ->
-            val docRef = db.collection("attendance").document(date).collection(subject).document(student.email)
-            batch.set(docRef, mapOf(
-                "name" to student.studentName,
-                "status" to if (student.isPresent) "P" else "A",
-                "enrollmentNo" to student.enrollmentNo
-            ))
-        }
-        batch.commit()
+        val presentEmails = studentList.filter { it.isPresent }.map { it.email.trim().lowercase() }
+        db.collection("attendance").document(subject)
+            .update(date, presentEmails)
+            .addOnFailureListener {
+                db.collection("attendance").document(subject).set(mapOf(date to presentEmails))
+            }
+    }
+
+    fun addSubject(name: String) {
+        db.collection("subjects").add(mapOf("name" to name))
     }
 }
-//package com.igdtuw.mysync.viewmodel
-//import com.google.firebase.database.FirebaseDatabase
-//import com.google.firebase.database.DatabaseReference
-//import androidx.compose.runtime.mutableStateListOf
-//import androidx.lifecycle.ViewModel
-//import com.igdtuw.mysync.model.AttendanceRecord
-//
-//class AttendanceViewModel : ViewModel() {
-//    private val database = FirebaseDatabase.getInstance().getReference("Attendance")
-//
-//    var studentList = mutableStateListOf<AttendanceRecord>()
-//        private set
-//
-//    var subjects = mutableStateListOf<String>()
-//        private set
-//
-//    // Mock data loader - Replace with your Firebase fetch logic for students
-//    init {
-//        loadInitialData()
-//    }
-//
-//    private fun loadInitialData() {
-//        // Example initial load
-//        subjects.addAll(listOf("Applied Physics", "Manufacturing Processes", "Data Structures"))
-//        studentList.addAll(listOf(
-//            AttendanceRecord("Aayushree Malviya", "00101012024", "aayushree@igdtuw.ac.in", false),
-//            AttendanceRecord("Adya", "00201012024", "adya@igdtuw.ac.in", false)
-//        ))
-//    }
-//
-//    fun toggleStudentStatus(email: String, isChecked: Boolean) {
-//        val index = studentList.indexOfFirst { it.email == email }
-//        if (index != -1) {
-//            // Replacing the object in the list triggers the UI update
-//            studentList[index] = studentList[index].copy(isPresent = isChecked)
-//        }
-//    }
-//
-//    fun markAllPresent(isPresent: Boolean) {
-//        for (i in studentList.indices) {
-//            studentList[i] = studentList[i].copy(isPresent = isPresent)
-//        }
-//    }
-//
-//    fun addSubject(name: String) {
-//        if (!subjects.contains(name)) subjects.add(name)
-//    }
-//
-//    fun uploadAttendance(subject: String, date: String) {
-//        val attendanceData = studentList.map {
-//            mapOf(
-//                "name" to it.studentName,
-//                "enrollment" to it.enrollmentNo,
-//                "status" to if (it.isPresent) "Present" else "Absent"
-//            )
-//        }
-//
-//        // Stores in: Attendance -> SubjectName -> Date -> StudentList
-//        database.child(subject).child(date).setValue(attendanceData)
-//    }
-//}

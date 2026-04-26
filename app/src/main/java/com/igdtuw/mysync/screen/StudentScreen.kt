@@ -15,23 +15,24 @@ import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.igdtuw.mysync.ui.theme.olive
+import com.igdtuw.mysync.R
 import com.igdtuw.mysync.viewmodel.AttendanceViewModel
 
 @Composable
-fun StudentScreen(viewModel: AttendanceViewModel, studentName: String) {
-    LaunchedEffect(studentName) {
-        viewModel.fetchStudentAttendance(studentName)
+fun StudentScreen(viewModel: AttendanceViewModel, studentName: String, studentEmail: String) {
+
+    LaunchedEffect(studentEmail) {
+        if (studentEmail.isNotEmpty()) {
+            viewModel.fetchStudentAttendance(studentEmail)
+        }
     }
 
     Column(
-        modifier = Modifier
-            .fillMaxSize()
-            .background(Color(0xFFF8F9FA))
-
+        modifier = Modifier.fillMaxSize().background(Color(0xFFF7F9F2)).padding(bottom= 20.dp)
     ) {
-        Box(modifier = Modifier.fillMaxWidth().background(
-            color = Color(0xFFA3B18A )),
+        Box(modifier = Modifier.fillMaxWidth()
+            .background(
+                color = Color(0xFFA3B18A )),
         ) {
             Column(
                 modifier = Modifier
@@ -39,30 +40,28 @@ fun StudentScreen(viewModel: AttendanceViewModel, studentName: String) {
                     .padding(start = 20.dp, top = 35.dp, bottom = 10.dp)
             ) {
                 Text(
-                    text = "Your Attendance", fontSize = 32.sp,
+                    text = "Your Attendance",
                     fontWeight = FontWeight.Black,
-                    color = Color(0xFF424D2F)
+                    fontSize = 32.sp,
+                    color = colorResource(id= R.color.dark_olive)
                 )
                 Text(
                     text = "Viewing records for $studentName",
                     fontSize = 14.sp,
-                    color = Color(0xFF343a40)
+                    color = colorResource(id = R.color.dark_grey)
                 )
             }
         }
         Spacer(modifier = Modifier.height(24.dp))
-//        Column(modifier= Modifier .padding(20.dp)) {
-
-            if (viewModel.subjectAttendance.isEmpty()) {
+        Column(modifier= Modifier.padding(start= 20.dp , end = 20.dp)) {
+            if (studentEmail.isEmpty()) {
                 Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
-                    Column(horizontalAlignment = Alignment.CenterHorizontally) {
-                        Text("No attendance history found.", color = Color.LightGray)
-                        Text(
-                            "Check back once the CR uploads data.",
-                            fontSize = 12.sp,
-                            color = Color.LightGray
-                        )
-                    }
+                    Text("Error: User Email not found. Please re-login.", color = Color.Red)
+                }
+            } else if (viewModel.subjectAttendance.isEmpty()) {
+                Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
+                    // This is where the spinner happens
+                    CircularProgressIndicator(color = Color(0xFF6B705C))
                 }
             } else {
                 LazyColumn(
@@ -122,6 +121,6 @@ fun StudentScreen(viewModel: AttendanceViewModel, studentName: String) {
                     }
                 }
             }
-
+        }
     }
 }

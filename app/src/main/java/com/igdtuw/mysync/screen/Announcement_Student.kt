@@ -10,6 +10,8 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.colorResource
+import androidx.compose.ui.text.font.Font
+import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -20,19 +22,51 @@ import com.igdtuw.mysync.viewmodel.AnnouncementViewModel
 fun Announcement_Student(viewModel: AnnouncementViewModel) {
     val announcements = viewModel.announcements
 
-    Column(modifier = Modifier.fillMaxSize().background(colorResource(id = R.color.cream))) {
-        Box(
-            modifier = Modifier.fillMaxWidth().background(colorResource(id = R.color.sage_green)).padding(vertical = 20.dp),
-            contentAlignment = Alignment.Center
+    Column(modifier = Modifier.fillMaxSize()
+        .background(Color(0xFFF7F9F2))
+    ) {
+        Box(modifier = Modifier.fillMaxWidth()
+            .background(
+                color = Color(0xFFA3B18A )),
         ) {
-            Text("Announcements", color = Color.White, fontWeight = FontWeight.Bold, fontSize = 20.sp)
+            Column(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(start = 20.dp, top = 35.dp, bottom = 10.dp)
+            ) {
+                Text(
+                    "Announcements",
+                    fontWeight = FontWeight.Black,
+                    fontSize = 32.sp,
+                    color = Color(0xFF424D2F)
+
+
+                )
+            }
         }
 
         LazyColumn(contentPadding = PaddingValues(16.dp), verticalArrangement = Arrangement.spacedBy(12.dp)) {
             items(announcements) { item ->
-                Card(modifier = Modifier.fillMaxWidth(), colors = CardDefaults.cardColors(containerColor = Color.White)) {
+//                Card(modifier = Modifier.fillMaxWidth(), colors = CardDefaults.cardColors(containerColor = Color.White)) {
+//                    Column(modifier = Modifier.padding(16.dp)) {
+//                        Text(item.title, fontWeight = FontWeight.Bold, color = colorResource(id = R.color.sage_green))
+//                        Spacer(Modifier.height(4.dp))
+//                        Text(item.description, fontSize = 14.sp)
+//                    }
+//                }
+                Card(
+                    modifier = Modifier.fillMaxWidth(),
+                    colors = CardDefaults.cardColors(containerColor = Color.White),
+                    elevation = CardDefaults.cardElevation(defaultElevation = 6.dp)
+                ) {
                     Column(modifier = Modifier.padding(16.dp)) {
-                        Text(item.title, fontWeight = FontWeight.Bold, color = colorResource(id = R.color.sage_green))
+                        Text(
+                            item.title,
+                            fontWeight = FontWeight.SemiBold,
+                            fontSize = 20.sp,
+                            fontFamily = FontFamily(Font(R.font.nunito_bold)),
+                            color = colorResource(id = R.color.dark_grey)
+                        )
                         Spacer(Modifier.height(4.dp))
                         Text(item.description, fontSize = 14.sp)
                     }

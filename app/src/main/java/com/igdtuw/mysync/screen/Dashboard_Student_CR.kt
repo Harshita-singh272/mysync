@@ -1,6 +1,5 @@
 package com.igdtuw.mysync.screen
 
-
 import android.widget.Toast
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -23,6 +22,7 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.Text
@@ -33,6 +33,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
@@ -46,7 +47,6 @@ import androidx.navigation.NavController
 import com.igdtuw.mysync.R
 import com.igdtuw.mysync.viewmodel.DashboardViewModel
 
-
 @Composable
 fun Dash_main_Cr(navController: NavController,dashboardViewModel: DashboardViewModel) {
     var showprofile by remember {
@@ -54,7 +54,7 @@ fun Dash_main_Cr(navController: NavController,dashboardViewModel: DashboardViewM
     }
     val data = dashboardViewModel.dashboardData.value
     val context = LocalContext.current
-    Box(modifier = Modifier.fillMaxSize().padding(bottom = 7.dp)) {
+    Box(modifier = Modifier.fillMaxSize().padding(bottom = 10.dp)) {
         LazyColumn(
             modifier = Modifier
                 .fillMaxSize()
@@ -64,23 +64,22 @@ fun Dash_main_Cr(navController: NavController,dashboardViewModel: DashboardViewM
                 Box(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .background(color = colorResource(id = R.color.background))
+                        .background(  color = Color(0xFFA3B18A ))
                 ) {
                     Row(
                         verticalAlignment = Alignment.CenterVertically,
-                        modifier = Modifier.padding(top = 35.dp)
+                        modifier = Modifier.padding(top = 27.dp)
                     ) {
                         Icon(
                             painter = painterResource(id = R.drawable.dashicon),
                             contentDescription = null,
-                            modifier = Modifier.size(size = 66.dp),
-                            tint = colorResource(id = R.color.olive)
+                            modifier = Modifier.size(size = 66.dp).padding(bottom = 3.dp),
+                            tint = colorResource(id = R.color.grey)
                         )
                         Text(
                             text = "DashBoard",
                             fontWeight = FontWeight.Bold,
-                            fontFamily = FontFamily(Font(R.font.nunito_bold)),
-                            color = colorResource(id = R.color.dark_grey),
+                            color = colorResource(id = R.color.dark_olive),
                             fontSize = 35.sp
                         )
                         Row(
@@ -95,12 +94,13 @@ fun Dash_main_Cr(navController: NavController,dashboardViewModel: DashboardViewM
                                     contentDescription = "Profile",
                                     modifier = Modifier.fillMaxWidth()
                                         .size(size = 80.dp),
-                                    tint = colorResource(id = R.color.olive)
+                                    tint = colorResource(id = R.color.grey)
                                 )
                             }
                         }
                     }
                 }
+                HorizontalDivider(thickness = 1.dp, color = colorResource(id = R.color.border))
                 Spacer(modifier = Modifier.height(10.dp))
                 Row(modifier = Modifier
                     .padding(start = 5.dp, end= 10.dp)

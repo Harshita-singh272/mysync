@@ -4,12 +4,14 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.MoreVert
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.text.font.FontWeight
@@ -77,8 +79,7 @@ fun Announcement_CR(viewModel: AnnouncementViewModel) {
                 Text(
                     "CR Announcement Board",
                     fontWeight = FontWeight.Black,
-                    fontSize = 28.sp,
-                    modifier= Modifier.align(Alignment.CenterHorizontally),
+                    fontSize = 30.sp,
                     color = colorResource(id = R.color.dark_olive)
                 )
             }
@@ -90,7 +91,7 @@ fun Announcement_CR(viewModel: AnnouncementViewModel) {
         ) {
             item {
                 Card(
-                    modifier = Modifier.fillMaxWidth(),
+                    modifier = Modifier.fillMaxWidth().shadow(elevation = 5.dp, shape = RoundedCornerShape(16.dp)),
                     colors = CardDefaults.cardColors(containerColor = Color.White)
                 ) {
                     Column(modifier = Modifier.padding(16.dp)) {
@@ -125,7 +126,7 @@ fun Announcement_CR(viewModel: AnnouncementViewModel) {
             items(announcements) { item ->
                 var menuExpanded by remember { mutableStateOf(false) }
                 Card(
-                    modifier = Modifier.fillMaxWidth(),
+                    modifier = Modifier.fillMaxWidth().shadow(elevation = 5.dp, shape = RoundedCornerShape(16.dp)),
                     colors = CardDefaults.cardColors(containerColor = Color.White)
                 ) {
                     Row(

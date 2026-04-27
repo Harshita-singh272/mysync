@@ -26,28 +26,40 @@ import kotlinx.coroutines.delay
 fun SplashScreen(navController: NavController, dashboardViewModel: DashboardViewModel) {
     val context = LocalContext.current
     val alphaAnim = remember { Animatable(0f) }
+    val SESSION_DURATION = 14 * 24 * 60 * 60 * 1000L
 
     LaunchedEffect(true) {
         alphaAnim.animateTo(1f, tween(1500))
         delay(1000)
 
         val sharedPref = context.getSharedPreferences("MySyncPrefs", Context.MODE_PRIVATE)
+
         val savedEmail = sharedPref.getString("user_email", null)
         val savedRole = sharedPref.getString("user_role", null)
+        val loginTime = sharedPref.getLong("login_time", 0L)
 
-        if (!savedEmail.isNullOrEmpty() && !savedRole.isNullOrEmpty()) {
-
+        val currentTime = System.currentTimeMillis()
+        val isSessionExpired = currentTime - loginTime > SESSION_DURATION
+        if (!savedEmail.isNullOrEmpty() &&
+            !savedRole.isNullOrEmpty() &&
+            !isSessionExpired
+        ) {
             dashboardViewModel.setUserData(savedEmail, "auto_login")
 
             navController.navigate(savedRole.lowercase()) {
                 popUpTo("splash") { inclusive = true }
             }
+
         } else {
+
+            sharedPref.edit().clear().apply()
+
             navController.navigate("login") {
                 popUpTo("splash") { inclusive = true }
             }
         }
     }
+
     Box(
         modifier = Modifier
             .fillMaxSize()

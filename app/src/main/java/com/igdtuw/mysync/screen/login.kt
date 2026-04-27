@@ -1,5 +1,6 @@
 package com.igdtuw.mysync.screen
 
+import android.content.Context
 import android.widget.Toast
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
@@ -104,10 +105,12 @@ fun Login(navController: NavController, dashboardViewModel: DashboardViewModel) 
                                             val role = doc.getString("role")?.lowercase() ?: "student"
 
                                             // Save Session
-                                            val sharedPref = context.getSharedPreferences("MySyncPrefs", android.content.Context.MODE_PRIVATE)
+                                            val sharedPref = context.getSharedPreferences("MySyncPrefs", Context.MODE_PRIVATE)
+
                                             sharedPref.edit()
                                                 .putString("user_email", emailInput)
                                                 .putString("user_role", role)
+                                                .putLong("login_time", System.currentTimeMillis())
                                                 .apply()
 
                                             dashboardViewModel.setUserData(emailInput, "direct_auth")

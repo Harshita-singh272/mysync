@@ -1,6 +1,7 @@
 package com.igdtuw.mysync.screen
 
 
+import android.content.Context
 import android.widget.Toast
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -496,10 +497,13 @@ fun Dash_CR(navController: NavController,dashboardViewModel: DashboardViewModel)
                         }
                         Spacer(modifier = Modifier.height(25.dp))
                         Button(onClick = {
+                            val sharedPref = context.getSharedPreferences("MySyncPrefs", Context.MODE_PRIVATE)
+                            sharedPref.edit().clear().apply()
                             navController.navigate("login") {
                                 popUpTo(navController.graph.startDestinationId) {
                                     inclusive = true
                                 }
+
                             }
                         },
                             modifier = Modifier.fillMaxWidth(),

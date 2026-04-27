@@ -14,6 +14,7 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.colorResource
@@ -118,7 +119,6 @@ fun Attendance_CR(viewModel: AttendanceViewModel = viewModel()) {
                             Toast.makeText(context, "Attendance uploaded!", Toast.LENGTH_SHORT).show()
                         }
                     },
-                    elevation = ButtonDefaults.buttonElevation(10.dp) ,
                     enabled = selectedSubject != "Select Subject",
                     modifier = Modifier.padding(20.dp).fillMaxWidth().height(56.dp),
                     shape = RoundedCornerShape(16.dp),
@@ -128,7 +128,7 @@ fun Attendance_CR(viewModel: AttendanceViewModel = viewModel()) {
         }
     ) { padding ->
         Column(modifier = Modifier.padding(padding).fillMaxSize().background(Color(0xFFF7F9F2))) {
-            Card(modifier = Modifier.padding(16.dp).fillMaxWidth(), colors = CardDefaults.cardColors(containerColor = Color.White)) {
+            Card(modifier = Modifier.padding(16.dp).fillMaxWidth().shadow(elevation = 5.dp, shape = RoundedCornerShape(16.dp)), colors = CardDefaults.cardColors(containerColor = Color.White)) {
                 Row(modifier = Modifier.padding(8.dp), verticalAlignment = Alignment.CenterVertically) {
                     Box(modifier = Modifier.weight(1f)) {
                         TextButton(onClick = { expanded = true }, modifier = Modifier.fillMaxWidth()) {

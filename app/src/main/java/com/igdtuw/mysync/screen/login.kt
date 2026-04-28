@@ -103,8 +103,6 @@ fun Login(navController: NavController, dashboardViewModel: DashboardViewModel) 
                                         isLoading = false
                                         if (doc.exists()) {
                                             val role = doc.getString("role")?.lowercase() ?: "student"
-
-                                            // Save Session
                                             val sharedPref = context.getSharedPreferences("MySyncPrefs", Context.MODE_PRIVATE)
 
                                             sharedPref.edit()
@@ -162,7 +160,7 @@ fun Login(navController: NavController, dashboardViewModel: DashboardViewModel) 
                 fontSize = 12.sp,
                 fontWeight = FontWeight.Bold,
                 color = Color(0xFF4F5D3D).copy(alpha = 0.6f),
-                letterSpacing = 2.sp, // Adds that high-end tech vibe
+                letterSpacing = 2.sp,
                 textAlign = TextAlign.Center
             )
             Text(

@@ -15,9 +15,9 @@ class TimetableViewModel : ViewModel() {
         TimetableData("Cse-1", "https://drive.google.com/file/d/1L6q1x0ofQdHqZLgCiQspe-aaWCdvfmFE/view?usp=drive_link", 1),
         TimetableData("Cse-2", "https://drive.google.com/file/d/1mW5OazbrSSIaA9GoBSUVBiRLET-kHxul/view?usp=drive_link", 1),
         TimetableData("Cse-3", "https://drive.google.com/file/d/1c-3czR3gNP_5QS9ngrGEp1Y_4RKbdPGR/view?usp=drive_link", 1),
-        TimetableData("CseAi-1", "https://drive.google.com/file/d/1klVUUwIJ8Hn-XahF7Y3sIhfAGQItzF91/view?usp=drive_link", 1),
+        TimetableData("CseAi-1","https://drive.google.com/file/d/1klVUUwIJ8Hn-XahF7Y3sIhfAGQItzF91/view?usp=drive_link",1),
         TimetableData("CseAi-2","https://drive.google.com/file/d/1Us97DWoKFczSdbNGrvB6NVjvhn2L4szu/view?usp=drive_link", 1),
-        TimetableData("CseAi-3", "https://drive.google.com/file/d/1jV9LcI7MJeeiAHzNLsM662EjP1mUQw8k/view?usp=drive_link", 1)
+        TimetableData("CseAi-3","https://drive.google.com/file/d/1jV9LcI7MJeeiAHzNLsM662EjP1mUQw8k/view?usp=drive_link",1)
     )
 
     var selectedBranch = mutableStateOf("Choose your branch")

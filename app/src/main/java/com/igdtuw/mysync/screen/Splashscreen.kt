@@ -22,6 +22,7 @@ import androidx.navigation.NavController
 import com.igdtuw.mysync.R
 import com.igdtuw.mysync.viewmodel.DashboardViewModel
 import kotlinx.coroutines.delay
+
 @Composable
 fun SplashScreen(navController: NavController, dashboardViewModel: DashboardViewModel) {
     val context = LocalContext.current
